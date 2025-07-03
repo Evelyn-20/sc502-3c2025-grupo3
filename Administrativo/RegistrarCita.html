@@ -1,74 +1,86 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Registrar Cita</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="style.css" />
+  <script src="scripts.js" defer></script>
 </head>
 <body>
 
-  <header class="top-bar">
-    <div class="logo"></div>
-    <nav class="menu">
-      <a href="#">Opción 1</a>
-      <a href="#">Opción 2</a>
-    </nav>
-    <div class="user-actions">
-      <a href="#">Cerrar sesión / Login</a>
-      <div class="user-avatar"></div>
-    </div>
-  </header>
+  <!-- Header -->
+ <header class="top-bar">
+  <div class="logo"></div>
+  <nav class="menu">
+    <a href="#">Opción 1</a>
+    <a href="#">Opción 2</a>
+  </nav>
+  <div class="user-actions">
+    <a href="#">Cerrar sesión</a>
+    <a href="#">Login</a>
+    <div class="user-avatar"></div>
+  </div>
+</header>
 
-  <main class="register-container">
+  <!-- Contenedor del formulario -->
+  <div class="register-container">
     <h2>Registrar Cita</h2>
-    <form id="form-cita">
+    <form id="form-registro">
       <div class="form-three-columns">
 
+        <!-- Columna 1 -->
         <div class="column">
-          <label for="cedulaPaciente">Cédula Paciente</label>
-          <input type="text" id="cedulaPaciente" required>
+          <label for="cedula-paciente">Cédula Paciente</label>
+          <input type="text" id="cedula-paciente" name="cedula_paciente" required />
 
-          <label for="telefono">Teléfono</label>
-          <input type="tel" id="telefono" required>
+          <label for="nombre-paciente">Nombre Completo</label>
+          <input type="text" id="nombre-paciente" name="nombre_paciente" required />
         </div>
 
+        <!-- Columna 2 -->
         <div class="column">
           <label for="servicio">Servicio</label>
-          <select id="servicio" required>
-            <option value="">Seleccione...</option>
-            <option value="consulta">Consulta General</option>
-            <option value="odontologia">Odontología</option>
-            <option value="oftalmologia">Oftalmología</option>
-            <option value="psicologia">Psicología</option>
+          <select id="servicio" name="servicio" required>
+            <option value="">-- Selecciona --</option>
+            <option value="consulta">Consulta</option>
+            <option value="seguimiento">Seguimiento</option>
+            <option value="urgencias">Urgencias</option>
           </select>
 
           <label for="especialidad">Especialidad</label>
-          <select id="especialidad" required>
-            <option value="">Seleccione...</option>
-            <option value="medicina">Medicina General</option>
-            <option value="dermatologia">Dermatología</option>
-            <option value="cardiologia">Cardiología</option>
-            <option value="neurologia">Neurología</option>
+          <select id="especialidad" name="especialidad" required>
+            <option value="">-- Selecciona --</option>
+            <option value="medicina-general">Medicina General</option>
+            <option value="pediatria">Pediatría</option>
+            <option value="ginecologia">Ginecología</option>
           </select>
 
           <label for="hora">Hora</label>
-          <input type="time" id="hora" required>
+          <select id="hora" name="hora" required>
+            <option value="">-- Selecciona --</option>
+            <option value="08:00">08:00</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+          </select>
         </div>
 
+        <!-- Columna 3 -->
         <div class="column">
           <label for="fecha">Fecha</label>
-          <input type="date" id="fecha" required>
+          <input type="date" id="fecha" name="fecha" required />
 
-          <label for="calendario">Calendario</label>
-          <input type="date" id="calendario" required>
+          <label>Calendario</label>
+          <div id="calendario" style="background:#e0e0e0; border-radius:16px; height:180px;"></div>
         </div>
+
       </div>
 
-     
-      <button type="submit">Registrar Cita</button>
+      <button type="submit" class="register-button">
+        Registrar Cita
+      </button>
     </form>
-  </main>
+  </div>
 
-  <script src="../js/scripts.js"></script>
 </body>
 </html>

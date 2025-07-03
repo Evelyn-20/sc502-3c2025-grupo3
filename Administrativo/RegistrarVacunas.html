@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Registrar Medicamento</title>
+  <title>Registrar Vacuna</title>
   <link rel="stylesheet" href="style.css" />
   <script src="scripts.js" defer></script>
 </head>
@@ -25,7 +25,7 @@
 
   <!-- Contenedor del formulario -->
   <div class="register-container">
-    <h2>Registrar Medicamento</h2>
+    <h2>Registrar Vacuna</h2>
     <form id="form-registro">
       <div class="form-three-columns">
 
@@ -34,23 +34,11 @@
           <label for="nombre">Nombre</label>
           <input type="text" id="nombre" name="nombre" required />
 
-          <label for="forma-farmaceutica">Forma Farmacéutica</label>
-          <select id="forma-farmaceutica" name="forma_farmaceutica" required>
+          <label for="esquema">Esquema Vacunación</label>
+          <select id="esquema" name="esquema_vacunacion" required>
             <option value="">-- Selecciona --</option>
-            <option value="tableta">Tableta</option>
-            <option value="jarabe">Jarabe</option>
-            <option value="inyeccion">Inyección</option>
-          </select>
-        </div>
-
-        <!-- Columna 2 -->
-        <div class="column">
-          <label for="grupo-terapeutico">Grupo Terapéutico</label>
-          <select id="grupo-terapeutico" name="grupo_terapeutico" required>
-            <option value="">-- Selecciona --</option>
-            <option value="antibiotico">Antibiótico</option>
-            <option value="analgesico">Analgésico</option>
-            <option value="antiiflamatorio">Antiinflamatorio</option>
+            <option value="unidosis">Unidosis</option>
+            <option value="multidosis">Multidosis</option>
           </select>
 
           <label for="estado">Estado</label>
@@ -61,21 +49,41 @@
           </select>
         </div>
 
-        <!-- Columna 3 -->
+        <!-- Columna 2 -->
         <div class="column">
+          <label for="enfermedad">Enfermedad</label>
+          <select id="enfermedad" name="enfermedad" required>
+            <option value="">-- Selecciona --</option>
+            <option value="sarampion">Sarampión</option>
+            <option value="influenza">Influenza</option>
+            <option value="covid-19">COVID-19</option>
+          </select>
+
           <label for="via-administracion">Vía Administración</label>
           <select id="via-administracion" name="via_administracion" required>
             <option value="">-- Selecciona --</option>
+            <option value="intramuscular">Intramuscular</option>
+            <option value="subcutanea">Subcutánea</option>
             <option value="oral">Oral</option>
-            <option value="intravenosa">Intravenosa</option>
-            <option value="topica">Tópica</option>
           </select>
+        </div>
+
+        <!-- Columna 3 -->
+        <div class="column">
+          <label>Grupo</label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="grupo" value="mujeres" /> Mujeres</label>
+            <label><input type="checkbox" name="grupo" value="hombres" /> Hombres</label>
+            <label><input type="checkbox" name="grupo" value="ninos" /> Niños</label>
+            <label><input type="checkbox" name="grupo" value="adultos" /> Adultos mayores</label>
+            <label><input type="checkbox" name="grupo" value="todos" /> Toda la población</label>
+          </div>
         </div>
 
       </div>
 
       <button type="submit" class="register-button">
-        Registrar Medicamento
+        Registrar Vacuna
       </button>
     </form>
   </div>
