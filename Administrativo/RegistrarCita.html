@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Cita</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header class="top-bar">
+    <div class="logo"></div>
+    <nav class="menu">
+      <a href="#">Opción 1</a>
+      <a href="#">Opción 2</a>
+    </nav>
+    <div class="user-actions">
+      <a href="#">Cerrar sesión / Login</a>
+      <div class="user-avatar"></div>
+    </div>
+  </header>
+
+  <main class="register-container">
+    <h2>Registrar Cita</h2>
+    <form id="form-cita">
+      <div class="form-three-columns">
+
+        <div class="column">
+          <label for="cedulaPaciente">Cédula Paciente</label>
+          <input type="text" id="cedulaPaciente" required>
+
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" required>
+        </div>
+
+        <div class="column">
+          <label for="servicio">Servicio</label>
+          <select id="servicio" required>
+            <option value="">Seleccione...</option>
+            <option value="consulta">Consulta General</option>
+            <option value="odontologia">Odontología</option>
+            <option value="oftalmologia">Oftalmología</option>
+            <option value="psicologia">Psicología</option>
+          </select>
+
+          <label for="especialidad">Especialidad</label>
+          <select id="especialidad" required>
+            <option value="">Seleccione...</option>
+            <option value="medicina">Medicina General</option>
+            <option value="dermatologia">Dermatología</option>
+            <option value="cardiologia">Cardiología</option>
+            <option value="neurologia">Neurología</option>
+          </select>
+
+          <label for="hora">Hora</label>
+          <input type="time" id="hora" required>
+        </div>
+
+        <div class="column">
+          <label for="fecha">Fecha</label>
+          <input type="date" id="fecha" required>
+
+          <label for="calendario">Calendario</label>
+          <input type="date" id="calendario" required>
+        </div>
+      </div>
+
+     
+      <button type="submit">Registrar Cita</button>
+    </form>
+  </main>
+
+  <script src="../js/scripts.js"></script>
+</body>
+</html>

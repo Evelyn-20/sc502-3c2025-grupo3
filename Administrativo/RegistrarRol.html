@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Rol</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header class="top-bar">
+    <div class="logo"></div>
+    <nav class="menu">
+      <a href="#">Opción 1</a>
+      <a href="#">Opción 2</a>
+    </nav>
+    <div class="user-actions">
+      <a href="#">Cerrar sesión / Login</a>
+      <div class="user-avatar"></div>
+    </div>
+  </header>
+  <main class="register-container">
+    <h2>Registrar Rol</h2>
+    <form id="form-rol">
+      <div class="form-grid">
+        <div>
+          <label for="nombreRol">Nombre</label>
+          <input type="text" id="nombreRol" required>
+        </div>
+        <div>
+          <label for="estadoRol">Estado</label>
+          <select id="estadoRol" required>
+            <option value="">Seleccione...</option>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="direccion">
+        <label for="descripcionRol">Descripción</label>
+        <textarea id="descripcionRol" rows="4" required></textarea>
+      </div>
+
+      <button type="submit">Registrar Rol</button>
+    </form>
+  </main>
+
+  <script src="../js/scripts.js"></script>
+</body>
+</html>

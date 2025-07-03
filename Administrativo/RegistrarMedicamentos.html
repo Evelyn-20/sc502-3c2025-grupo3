@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Medicamento</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header class="top-bar">
+    <div class="logo"></div>
+    <nav class="menu">
+      <a href="#">Opción 1</a>
+      <a href="#">Opción 2</a>
+    </nav>
+    <div class="user-actions">
+      <a href="#">Cerrar sesión / Login</a>
+      <div class="user-avatar"></div>
+    </div>
+  </header>
+
+  <main class="register-container">
+    <h2>Registrar Medicamento</h2>
+    <form id="form-medicamento">
+      <div class="form-three-columns">
+
+        <div class="column">
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre" required>
+
+          <label for="forma">Forma Farmacéutica</label>
+          <select id="forma" required>
+            <option value="">Seleccione...</option>
+            <option value="comprimido">Comprimido</option>
+            <option value="jarabe">Jarabe</option>
+            <option value="inyectable">Inyectable</option>
+            <option value="capsula">Cápsula</option>
+          </select>
+        </div>
+
+        <div class="column">
+          <label for="grupo">Grupo Terapéutico</label>
+          <select id="grupo" required>
+            <option value="">Seleccione...</option>
+            <option value="analgesico">Analgésico</option>
+            <option value="antibiotico">Antibiótico</option>
+            <option value="antihipertensivo">Antihipertensivo</option>
+            <option value="antinflamatorio">Antiinflamatorio</option>
+          </select>
+
+          <label for="estado">Estado</label>
+          <select id="estado" required>
+            <option value="">Seleccione...</option>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
+
+        <div class="column">
+          <label for="via">Vía de Administración</label>
+          <select id="via" required>
+            <option value="">Seleccione...</option>
+            <option value="oral">Oral</option>
+            <option value="intravenosa">Intravenosa</option>
+            <option value="topica">Tópica</option>
+            <option value="inhalatoria">Inhalatoria</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit">Registrar Medicamento</button>
+    </form>
+  </main>
+
+  <script src="../js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Usuario</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header class="top-bar">
+    <div class="logo"></div>
+    <nav class="menu">
+      <a href="#">Opción 1</a>
+      <a href="#">Opción 2</a>
+    </nav>
+    <div class="user-actions">
+      <a href="#">Cerrar sesión / Login</a>
+      <div class="user-avatar"></div>
+    </div>
+  </header>
+
+  <main class="register-container">
+    <h2>Registrar Usuario</h2>
+    <form id="form-register">
+      <div class="form-grid">
+        <div>
+          <label for="cedula">Cédula</label>
+          <input type="text" id="cedula">
+        </div>
+        <div>
+          <label for="nombre">Nombre</label>
+          <input type="text" id="nombre">
+        </div>
+        <div>
+          <label for="apellidos">Apellidos</label>
+          <input type="text" id="apellidos">
+        </div>
+        <div>
+          <label for="correo">Correo electrónico</label>
+          <input type="email" id="correo">
+        </div>
+        <div>
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono">
+        </div>
+        <div>
+          <label for="fecha">Fecha Nacimiento</label>
+          <input type="date" id="fecha">
+        </div>
+        <div>
+          <label for="rol">Rol</label>
+          <select id="rol">
+            <option value="">Seleccione...</option>
+            <option value="admin">Administrador</option>
+            <option value="usuario">Usuario</option>
+          </select>
+        </div>
+        <div>
+          <label for="estado">Estado</label>
+          <select id="estado">
+            <option value="">Seleccione...</option>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
+      </div>
+      <div class="direccion">
+        <label for="direccion">Dirección</label>
+        <textarea id="direccion" rows="3"></textarea>
+      </div>
+      <button type="submit">Registrar Usuario</button>
+    </form>
+  </main>
+
+  <script src="../js/scripts.js"></script>
+</body>
+</html>
