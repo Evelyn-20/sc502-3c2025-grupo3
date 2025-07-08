@@ -10,16 +10,16 @@
 </head>
 
 <body>
-  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
       <div class="navbar-brand d-flex align-items-center">
         <div class="logo-placeholder me-3"></div>
-
       </div>
       <div class="navbar-nav me-auto">
-        <a class="nav-link" href="#">Opción 1</a>
-        <a class="nav-link" href="#">Opción 2</a>
+        <a class="nav-link" href="HistorialCitas.html">Citas</a>
+        <a class="nav-link" href="Expediente.html">Expediente</a>
+        <a class="nav-link" href="Medicamentos.html">Medicamentos</a>
+        <a class="nav-link" href="Vacunas.html">Vacunas</a>
       </div>
       <div class="d-flex align-items-center">
         <span class="text-light me-3">Cerrar sesión / Login</span>
@@ -28,16 +28,12 @@
     </div>
   </nav>
 
-  <!-- Main Content -->
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-10">
-        <!-- Title -->
         <h1 class="text-center mb-5">Registrar Cita</h1>
 
-        <!-- Form Row -->
         <div class="row mb-4">
-          <!-- Servicio -->
           <div class="col-md-4 mb-3">
             <label class="form-label fw-bold">Servicio</label>
             <select class="form-select">
@@ -48,13 +44,11 @@
             </select>
           </div>
 
-          <!-- Fecha -->
           <div class="col-md-4 mb-3">
             <label class="form-label fw-bold">Fecha</label>
             <input type="date" class="form-control date-input">
           </div>
 
-          <!-- Hora -->
           <div class="col-md-4 mb-3">
             <label class="form-label fw-bold">Hora</label>
             <select class="form-select">
@@ -70,9 +64,7 @@
           </div>
         </div>
 
-        <!-- Second Row -->
         <div class="row mb-4">
-          <!-- Especialidad -->
           <div class="col-md-4 mb-3">
             <label class="form-label fw-bold">Especialidad</label>
             <select class="form-select">
@@ -84,15 +76,14 @@
             </select>
           </div>
 
-          <!-- Calendario -->
           <div class="col-md-4 mb-4">
-            <div class="calendar-box">
-              Calendario
+            <div class="d-flex justify-content-center calendar-box">
+              <div class="border rounded" data-coreui-locale="en-US" data-coreui-start-date="2024/02/13"
+                data-coreui-toggle="calendar"></div>
             </div>
           </div>
         </div>
 
-        <!-- Register Button -->
         <div class="row">
           <div class="col-12 text-center">
             <button type="button" class="btn btn-register">Registrar Cita</button>
