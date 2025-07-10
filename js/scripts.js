@@ -5,18 +5,18 @@
 */
 
 document.addEventListener("DOMContentLoaded", function () {
-  const form      = document.getElementById("form-registro");
+  const form = document.getElementById("form-registro");
   const titleElem = document.querySelector(".register-container h2");
   if (!form || !titleElem) return;
 
   // 1 Detecta la página según IDs únicos
   const has = id => !!document.getElementById(id);
   let pageType;
-  if      (has("cedula-paciente"))    pageType = "cita";
-  else if (has("descripcion"))        pageType = "rol";
+  if (has("cedula-paciente")) pageType = "cita";
+  else if (has("descripcion")) pageType = "rol";
   else if (has("forma-farmaceutica")) pageType = "medicamento";
-  else if (has("esquema"))            pageType = "vacuna";
-  else                                pageType = "usuario";
+  else if (has("esquema")) pageType = "vacuna";
+  else pageType = "usuario";
 
   // 2 Listeners eléctricos por página
   if (pageType === "usuario") {
@@ -48,32 +48,32 @@ document.addEventListener("DOMContentLoaded", function () {
     // 5 Validaciones según página
     switch (pageType) {
       case "usuario":
-        ["cedula","email","direccion","nombre","telefono",
-         "genero","apellidos","fecha-nacimiento","rol","estado"]
-        .forEach(id => {
-          const el = document.getElementById(id);
-          if (!el.value.trim()) {
-            showError(el, "Campo obligatorio");
-            valid = false;
-          }
-        });
+        ["cedula", "email", "direccion", "nombre", "telefono",
+          "genero", "apellidos", "fecha-nacimiento", "rol", "estado"]
+          .forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value.trim()) {
+              showError(el, "Campo obligatorio");
+              valid = false;
+            }
+          });
         break;
 
       case "cita":
-        ["cedula-paciente","nombre-paciente",
-         "servicio","especialidad","hora","fecha"]
-        .forEach(id => {
-          const el = document.getElementById(id);
-          if (!el.value.trim()) {
-            showError(el, "Campo obligatorio");
-            valid = false;
-          }
-        });
+        ["cedula-paciente", "nombre-paciente",
+          "servicio", "especialidad", "hora", "fecha"]
+          .forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value.trim()) {
+              showError(el, "Campo obligatorio");
+              valid = false;
+            }
+          });
         const fechaVal = document.getElementById("fecha").value;
         if (fechaVal) {
           const sel = new Date(fechaVal),
-                hoy = new Date();
-          hoy.setHours(0,0,0,0);
+            hoy = new Date();
+          hoy.setHours(0, 0, 0, 0);
           if (sel < hoy) {
             showError(document.getElementById("fecha"), "Fecha inválida");
             valid = false;
@@ -82,37 +82,37 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
 
       case "rol":
-        ["nombre","estado","descripcion"]
-        .forEach(id => {
-          const el = document.getElementById(id);
-          if (!el.value.trim()) {
-            showError(el, "Campo obligatorio");
-            valid = false;
-          }
-        });
+        ["nombre", "estado", "descripcion"]
+          .forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value.trim()) {
+              showError(el, "Campo obligatorio");
+              valid = false;
+            }
+          });
         break;
 
       case "medicamento":
-        ["nombre","forma-farmaceutica","grupo-terapeutico",
-         "estado","via-administracion"]
-        .forEach(id => {
-          const el = document.getElementById(id);
-          if (!el.value.trim()) {
-            showError(el, "Campo obligatorio");
-            valid = false;
-          }
-        });
+        ["nombre", "forma-farmaceutica", "grupo-terapeutico",
+          "estado", "via-administracion"]
+          .forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value.trim()) {
+              showError(el, "Campo obligatorio");
+              valid = false;
+            }
+          });
         break;
 
       case "vacuna":
-        ["nombre","esquema","estado","enfermedad","via-administracion"]
-        .forEach(id => {
-          const el = document.getElementById(id);
-          if (!el.value.trim()) {
-            showError(el, "Campo obligatorio");
-            valid = false;
-          }
-        });
+        ["nombre", "esquema", "estado", "enfermedad", "via-administracion"]
+          .forEach(id => {
+            const el = document.getElementById(id);
+            if (!el.value.trim()) {
+              showError(el, "Campo obligatorio");
+              valid = false;
+            }
+          });
         const checks = Array.from(document.querySelectorAll("input[name='grupo']"));
         if (!checks.some(c => c.checked)) {
           const container = document.querySelector(".checkbox-group");
@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
     form.reset();
   });
 
-// Funciones auxiliares 
+  // Funciones auxiliares 
   function showError(el, msg) {
     const wrapper = el.tagName === "DIV" ? el : el.parentElement;
     const div = document.createElement("div");
@@ -158,10 +158,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function onSubmitRegistro(event) {
   event.preventDefault();
-  
+
   document.querySelectorAll('.error-message').forEach(el => el.remove());
 
-  const pwd       = document.getElementById('password').value.trim();
+  const pwd = document.getElementById('password').value.trim();
   const pwdVerify = document.getElementById('confirm-password').value.trim();
 
 
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   crearCalendario();
 
-  window.cambiarMes = function(direccion) {
+  window.cambiarMes = function (direccion) {
     mesActual += direccion;
 
     if (mesActual > 11) {
@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
     crearCalendario();
   };
 
-  window.seleccionarFecha = function(dia) {
+  window.seleccionarFecha = function (dia) {
     const fechaClick = new Date(añoActual, mesActual, dia);
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
@@ -250,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function crearCalendario() {
     const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
     let html = `
       <div style="background: white; border: 1px solid #d0d0d0; border-radius: 15px; padding: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-height: 220px;">
@@ -332,4 +332,61 @@ document.addEventListener("DOMContentLoaded", function () {
     const prev = wrapper.querySelector(".error-message");
     if (prev) prev.remove();
   }
+});
+
+/*
+
+  Script para el Modal
+
+*/
+function deshabilitarRol() {
+  console.log('Rol deshabilitado');
+
+  const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmacion'));
+  modal.hide();
+}
+
+/*
+
+  Script para el login
+
+*/
+
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.querySelector("form");
+  if (!form) return;
+
+  const cedulaAdmin = "123456789";
+  const passwordAdmin = "admin123";
+  
+  const cedulaDoctor = "987654321";
+  const passwordDoctor = "medico123";
+  
+  const cedulaPaciente = "456789123";
+  const passwordPaciente = "paciente123";
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    
+    const cedula = document.getElementById("cedula").value.trim();
+    const password = document.getElementById("password").value.trim();
+    
+    if (!cedula || !password) {
+      alert("Por favor complete todos los campos");
+      return;
+    }
+    
+    if (cedula === cedulaAdmin && password === passwordAdmin) {
+      window.location.href = "../Administrativo/inicioAdmin.html";
+    } 
+    else if (cedula === cedulaDoctor && password === passwordDoctor) {
+      window.location.href = "../Medicos/inicioMedico.html";
+    } 
+    else if (cedula === cedulaPaciente && password === passwordPaciente) {
+      window.location.href = "../Paciente/inicioPaciente.html";
+    } 
+    else {
+      alert("Credenciales incorrectas");
+    }
+  });
 });

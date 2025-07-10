@@ -16,13 +16,13 @@
         <div class="logo"></div>
       </a>
       <div class="navbar-nav me-auto">
-        <a class="nav-link" href="HistorialCitas.html">Citas</a>
-        <a class="nav-link" href="Expediente.html">Expediente</a>
-        <a class="nav-link" href="Medicamentos.html">Medicamentos</a>
-        <a class="nav-link" href="Vacunas.html">Vacunas</a>
+        <a class="nav-link" href="CitasProgramadas.php">Citas</a>
+        <a class="nav-link" href="ConsultarExpediente.php">Expediente</a>
+        <a class="nav-link" href="Medicamentos.php">Medicamentos</a>
+        <a class="nav-link" href="Vacunas.php">Vacunas</a>
       </div>
       <div class="d-flex align-items-center">
-        <a href="../Registro/Registro.html" class="text-black me-3 text-decoration-none">Cerrar sesión / Login</a>
+        <a href="../Registro/Login.php" class="text-black me-3 text-decoration-none">Cerrar sesión</a>
       </div>
     </div>
   </nav>
@@ -41,15 +41,27 @@
             <tr>
               <th>Cédula</th>
               <th>Nombre Paciente</th>
+              <th>Acciones</th>
             </tr>
           </thead>
+          <tbody>
+            <tr>
+              <td>301230456</td>
+              <td>Juan Pérez</td>
+              <td>
+                <a type="button" class="btn-action btn-ver me-2" href="Expediente.html" title="Ver Expediente">
+                  <i class="fas fa-file-medical"></i> Ver Expediente
+                </a>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
   <script src="../js/scripts.js" defer></script>
 </body>
-
 </html>

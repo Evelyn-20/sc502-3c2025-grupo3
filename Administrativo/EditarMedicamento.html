@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registrar Medicamento</title>
+  <title>Actualizar Medicamento</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css" />
 </head>
@@ -17,10 +17,10 @@
       </a>
       <div class="navbar-nav me-auto">
         <a class="nav-link" href="RegistrarUsuario.html">Usuarios</a>
-        <a class="nav-link" href="RegistrarRol.html">Roles</a>
-        <a class="nav-link" href="RegistrarCita.html">Citas</a>
-        <a class="nav-link" href="RegistrarMedicamentos.html">Medicamentos</a>
-        <a class="nav-link" href="RegistrarVacunas.html">Vacunas</a>
+        <a class="nav-link" href="Roles.php">Roles</a>
+        <a class="nav-link" href="Citas.php">Citas</a>
+        <a class="nav-link" href="Medicamentos.php">Medicamentos</a>
+        <a class="nav-link" href="Vacunas.php">Vacunas</a>
       </div>
       <div class="d-flex align-items-center">
         <a href="../Registro/Login.php" class="text-black me-3 text-decoration-none">Cerrar sesión</a>
@@ -31,18 +31,18 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-10">
-        <h1 class="text-center mb-5">Registrar Medicamento</h1>
+        <h1 class="text-center mb-5">Actualizar Medicamento</h1>
 
         <form id="form-registro">
           <div class="row mb-4">
             <div class="col-md-4 mb-3">
               <label for="nombre" class="form-label fw-bold">Nombre</label>
-              <input type="text" id="nombre" name="nombre" class="form-control" required />
+              <input type="text" id="nombre" name="nombre" class="form-control" />
             </div>
 
             <div class="col-md-4 mb-3">
               <label for="forma-farmaceutica" class="form-label fw-bold">Forma Farmacéutica</label>
-              <select id="forma-farmaceutica" name="forma_farmaceutica" class="form-select" required>
+              <select id="forma-farmaceutica" name="forma_farmaceutica" class="form-select">
                 <option value="">-- Selecciona --</option>
                 <option value="tableta">Tableta</option>
                 <option value="jarabe">Jarabe</option>
@@ -52,7 +52,7 @@
 
             <div class="col-md-4 mb-3">
               <label for="grupo-terapeutico" class="form-label fw-bold">Grupo Terapéutico</label>
-              <select id="grupo-terapeutico" name="grupo_terapeutico" class="form-select" required>
+              <select id="grupo-terapeutico" name="grupo_terapeutico" class="form-select">
                 <option value="">-- Selecciona --</option>
                 <option value="antibiotico">Antibiótico</option>
                 <option value="analgesico">Analgésico</option>
@@ -64,7 +64,7 @@
           <div class="row mb-4">
             <div class="col-md-4 mb-3">
               <label for="estado" class="form-label fw-bold">Estado</label>
-              <select id="estado" name="estado" class="form-select" required>
+              <select id="estado" name="estado" class="form-select">
                 <option value="">-- Selecciona --</option>
                 <option value="activo">Activo</option>
                 <option value="inactivo">Inactivo</option>
@@ -73,7 +73,7 @@
 
             <div class="col-md-4 mb-3">
               <label for="via-administracion" class="form-label fw-bold">Vía Administración</label>
-              <select id="via-administracion" name="via_administracion" class="form-select" required>
+              <select id="via-administracion" name="via_administracion" class="form-select">
                 <option value="">-- Selecciona --</option>
                 <option value="oral">Oral</option>
                 <option value="intravenosa">Intravenosa</option>
@@ -84,7 +84,7 @@
 
           <div class="row">
             <div class="col-12 text-center">
-              <button type="submit" class="btn btn-register">Registrar Medicamento</button>
+              <button type="submit" class="btn btn-register">Actualizar Medicamento</button>
             </div>
           </div>
         </form>
