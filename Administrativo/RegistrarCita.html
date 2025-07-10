@@ -1,86 +1,97 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registrar Cita</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="scripts.js" defer></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <script src="../js/scripts.js" defer></script>
 </head>
+
 <body>
-
-  <!-- Header -->
- <header class="top-bar">
-  <div class="logo"></div>
-  <nav class="menu">
-    <a href="#">Opción 1</a>
-    <a href="#">Opción 2</a>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a href="inicioAdmin.html" class="navbar-brand d-flex align-items-center">
+        <div class="logo"></div>
+      </a>
+      <div class="navbar-nav me-auto">
+        <a class="nav-link" href="RegistrarUsuario.html">Usuarios</a>
+        <a class="nav-link" href="RegistrarRol.html">Roles</a>
+        <a class="nav-link" href="RegistrarCita.html">Citas</a>
+        <a class="nav-link" href="RegistrarMedicamentos.html">Medicamentos</a>
+        <a class="nav-link" href="RegistrarVacunas.html">Vacunas</a>
+      </div>
+      <div class="d-flex align-items-center">
+        <a href="../Registro/Registro.html" class="text-black me-3 text-decoration-none">Cerrar sesión / Login</a>
+      </div>
+    </div>
   </nav>
-  <div class="user-actions">
-    <a href="#">Cerrar sesión</a>
-    <a href="#">Login</a>
-    <div class="user-avatar"></div>
-  </div>
-</header>
 
-  <!-- Contenedor del formulario -->
-  <div class="register-container">
-    <h2>Registrar Cita</h2>
-    <form id="form-registro">
-      <div class="form-three-columns">
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <h1 class="text-center mb-5">Registrar Cita</h1>
 
-        <!-- Columna 1 -->
-        <div class="column">
-          <label for="cedula-paciente">Cédula Paciente</label>
-          <input type="text" id="cedula-paciente" name="cedula_paciente" required />
+        <form id="form-registro">
+          <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+              <label for="cedula-paciente" class="form-label fw-bold">Cédula Paciente</label>
+              <input type="text" id="cedula-paciente" name="cedula_paciente" class="form-control" />
 
-          <label for="nombre-paciente">Nombre Completo</label>
-          <input type="text" id="nombre-paciente" name="nombre_paciente" required />
-        </div>
+              <label for="nombre-paciente" class="form-label fw-bold mt-3">Nombre Completo</label>
+              <input type="text" id="nombre-paciente" name="nombre_paciente" class="form-control" />
+            </div>
 
-        <!-- Columna 2 -->
-        <div class="column">
-          <label for="servicio">Servicio</label>
-          <select id="servicio" name="servicio" required>
-            <option value="">-- Selecciona --</option>
-            <option value="consulta">Consulta</option>
-            <option value="seguimiento">Seguimiento</option>
-            <option value="urgencias">Urgencias</option>
-          </select>
+            <div class="col-md-4 mb-3">
+              <label for="servicio" class="form-label fw-bold">Servicio</label>
+              <select id="servicio" name="servicio" class="form-select">
+                <option value="">-- Selecciona --</option>
+                <option value="consulta">Consulta</option>
+                <option value="seguimiento">Seguimiento</option>
+                <option value="urgencias">Urgencias</option>
+              </select>
 
-          <label for="especialidad">Especialidad</label>
-          <select id="especialidad" name="especialidad" required>
-            <option value="">-- Selecciona --</option>
-            <option value="medicina-general">Medicina General</option>
-            <option value="pediatria">Pediatría</option>
-            <option value="ginecologia">Ginecología</option>
-          </select>
+              <label for="especialidad" class="form-label fw-bold mt-3">Especialidad</label>
+              <select id="especialidad" name="especialidad" class="form-select">
+                <option value="">-- Selecciona --</option>
+                <option value="medicina-general">Medicina General</option>
+                <option value="pediatria">Pediatría</option>
+                <option value="ginecologia">Ginecología</option>
+              </select>
 
-          <label for="hora">Hora</label>
-          <select id="hora" name="hora" required>
-            <option value="">-- Selecciona --</option>
-            <option value="08:00">08:00</option>
-            <option value="09:00">09:00</option>
-            <option value="10:00">10:00</option>
-          </select>
-        </div>
+              <label for="hora" class="form-label fw-bold mt-3">Hora</label>
+              <select id="hora" name="hora" class="form-select">
+                <option value="">-- Selecciona --</option>
+                <option value="08:00">08:00</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+              </select>
+            </div>
 
-        <!-- Columna 3 -->
-        <div class="column">
-          <label for="fecha">Fecha</label>
-          <input type="date" id="fecha" name="fecha" required />
+            <div class="col-md-4 mb-3">
+              <label for="fecha" class="form-label fw-bold">Fecha</label>
+              <input type="text" id="fecha" name="fecha" class="form-control date-input" readonly />
 
-          <label>Calendario</label>
-          <div id="calendario" style="background:#e0e0e0; border-radius:16px; height:180px;"></div>
-        </div>
-
+              <label class="form-label fw-bold mt-3">Calendario</label>
+              <div id="calendario-simple"></div>
+            </div>
+          </div>
       </div>
 
-      <button type="submit" class="register-button">
-        Registrar Cita
-      </button>
-    </form>
+      <div class="row">
+        <div class="col-12 text-center">
+          <button type="submit" class="btn btn-register">Registrar Cita</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/scripts.js" defer></script>
 </body>
+
 </html>

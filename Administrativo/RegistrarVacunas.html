@@ -1,92 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Registrar Vacuna</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="scripts.js" defer></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
 </head>
+
 <body>
-
-  <!-- Header -->
-  <header class="top-bar">
-  <div class="logo"></div>
-  <nav class="menu">
-    <a href="#">Opción 1</a>
-    <a href="#">Opción 2</a>
-  </nav>
-  <div class="user-actions">
-    <a href="#">Cerrar sesión</a>
-    <a href="#">Login</a>
-    <div class="user-avatar"></div>
-  </div>
-</header>
-
-  <!-- Contenedor del formulario -->
-  <div class="register-container">
-    <h2>Registrar Vacuna</h2>
-    <form id="form-registro">
-      <div class="form-three-columns">
-
-        <!-- Columna 1 -->
-        <div class="column">
-          <label for="nombre">Nombre</label>
-          <input type="text" id="nombre" name="nombre" required />
-
-          <label for="esquema">Esquema Vacunación</label>
-          <select id="esquema" name="esquema_vacunacion" required>
-            <option value="">-- Selecciona --</option>
-            <option value="unidosis">Unidosis</option>
-            <option value="multidosis">Multidosis</option>
-          </select>
-
-          <label for="estado">Estado</label>
-          <select id="estado" name="estado" required>
-            <option value="">-- Selecciona --</option>
-            <option value="activo">Activo</option>
-            <option value="inactivo">Inactivo</option>
-          </select>
-        </div>
-
-        <!-- Columna 2 -->
-        <div class="column">
-          <label for="enfermedad">Enfermedad</label>
-          <select id="enfermedad" name="enfermedad" required>
-            <option value="">-- Selecciona --</option>
-            <option value="sarampion">Sarampión</option>
-            <option value="influenza">Influenza</option>
-            <option value="covid-19">COVID-19</option>
-          </select>
-
-          <label for="via-administracion">Vía Administración</label>
-          <select id="via-administracion" name="via_administracion" required>
-            <option value="">-- Selecciona --</option>
-            <option value="intramuscular">Intramuscular</option>
-            <option value="subcutanea">Subcutánea</option>
-            <option value="oral">Oral</option>
-          </select>
-        </div>
-
-        <!-- Columna 3 -->
-        <div class="column">
-          <label>Grupo</label>
-          <div class="checkbox-group">
-            <label><input type="checkbox" name="grupo" value="mujeres" /> Mujeres</label>
-            <label><input type="checkbox" name="grupo" value="hombres" /> Hombres</label>
-            <label><input type="checkbox" name="grupo" value="ninos" /> Niños</label>
-            <label><input type="checkbox" name="grupo" value="adultos" /> Adultos mayores</label>
-            <label><input type="checkbox" name="grupo" value="todos" /> Toda la población</label>
-          </div>
-        </div>
-
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a href="inicioAdmin.html" class="navbar-brand d-flex align-items-center">
+        <div class="logo"></div>
+      </a>
+      <div class="navbar-nav me-auto">
+        <a class="nav-link" href="RegistrarUsuario.html">Usuarios</a>
+        <a class="nav-link" href="RegistrarRol.html">Roles</a>
+        <a class="nav-link" href="RegistrarCita.html">Citas</a>
+        <a class="nav-link" href="RegistrarMedicamentos.html">Medicamentos</a>
+        <a class="nav-link" href="RegistrarVacunas.html">Vacunas</a>
       </div>
+      <div class="d-flex align-items-center">
+        <a href="../Registro/Registro.html" class="text-black me-3 text-decoration-none">Cerrar sesión / Login</a>
+      </div>
+    </div>
+  </nav>
 
-      <button type="submit" class="register-button">
-        Registrar Vacuna
-      </button>
-    </form>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <h1 class="text-center mb-5">Registrar Vacuna</h1>
+
+        <form id="form-registro">
+          <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+              <label for="nombre" class="form-label fw-bold">Nombre</label>
+              <input type="text" id="nombre" name="nombre" class="form-control" />
+              
+              <label for="esquema" class="form-label fw-bold">Esquema Vacunación</label>
+              <select id="esquema" name="esquema_vacunacion" class="form-select">
+                <option value="">-- Selecciona --</option>
+                <option value="unidosis">Unidosis</option>
+                <option value="multidosis">Multidosis</option>
+              </select>
+              
+              <label for="estado" class="form-label fw-bold">Estado</label>
+              <select id="estado" name="estado" class="form-select">
+                <option value="">-- Selecciona --</option>
+                <option value="activo">Activo</option>
+                <option value="inactivo">Inactivo</option>
+              </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label for="enfermedad" class="form-label fw-bold">Enfermedad</label>
+              <select id="enfermedad" name="enfermedad" class="form-select">
+                <option value="">-- Selecciona --</option>
+                <option value="sarampion">Sarampión</option>
+                <option value="influenza">Influenza</option>
+                <option value="covid-19">COVID-19</option>
+              </select>
+              
+              <label for="via-administracion" class="form-label fw-bold">Vía Administración</label>
+              <select id="via-administracion" name="via_administracion" class="form-select">
+                <option value="">-- Selecciona --</option>
+                <option value="intramuscular">Intramuscular</option>
+                <option value="subcutanea">Subcutánea</option>
+                <option value="oral">Oral</option>
+              </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <label class="form-label fw-bold">Grupo</label>
+              <div class="checkbox-group">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="grupo" value="mujeres" id="mujeres" />
+                  <label class="form-check-label" for="mujeres">Mujeres</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="grupo" value="hombres" id="hombres" />
+                  <label class="form-check-label" for="hombres">Hombres</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="grupo" value="ninos" id="ninos" />
+                  <label class="form-check-label" for="ninos">Niños</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="grupo" value="adultos" id="adultos" />
+                  <label class="form-check-label" for="adultos">Adultos mayores</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="grupo" value="todos" id="todos" />
+                  <label class="form-check-label" for="todos">Toda la población</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12 text-center">
+              <button type="submit" class="btn btn-register">Registrar Vacuna</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/scripts.js" defer></script>
 </body>
+
 </html>
