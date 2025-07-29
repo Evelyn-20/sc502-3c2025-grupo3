@@ -21,7 +21,7 @@
         </div>
         <div class="row mb-4">
           <div class="col-4">
-            <a type="button" class="btn btn-nuevo" href="RegistrarMedicamento.html">+ Registrar Rol</a>
+            <a type="button" class="btn btn-nuevo" href="RegistrarRol.html">+ Registrar Rol</a>
           </div>
         </div>
         <table class="custom-table table">

@@ -1,12 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <a href="inicioAdmin.html" class="navbar-brand d-flex align-items-center">
+        <a href="inicioMedico.html" class="navbar-brand d-flex align-items-center">
             <div class="logo"></div>
         </a>
         <div class="navbar-nav me-auto">
-            <a class="nav-link" href="RegistrarUsuario.html">Usuarios</a>
-            <a class="nav-link" href="Roles.php">Roles</a>
-            <a class="nav-link" href="Citas.php">Citas</a>
+            <a class="nav-link" href="CitasProgramadas.php">Citas</a>
+            <a class="nav-link" href="ConsultarExpediente.php">Expediente</a>
             <a class="nav-link" href="Medicamentos.php">Medicamentos</a>
             <a class="nav-link" href="Vacunas.php">Vacunas</a>
         </div>

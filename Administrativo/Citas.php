@@ -21,7 +21,7 @@
         </div>
         <div class="row mb-4">
           <div class="col-4">
-            <a type="button" class="btn btn-nuevo" href="registrar_cita.html">+ Registrar Cita</a>
+            <a type="button" class="btn btn-nuevo" href="RegistrarCita.html">+ Registrar Cita</a>
           </div>
         </div>
         <table class="custom-table table">
