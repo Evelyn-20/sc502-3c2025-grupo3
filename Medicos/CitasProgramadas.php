@@ -10,6 +10,8 @@
 </head>
 
 <body>
+  <?php include("MenuMedico.php") ?>
+
   <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
       <a href="inicioMedico.html" class="navbar-brand d-flex align-items-center">
