@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <?php include("MenuPaciente.php") ?>
+  <?php include("../components/MenuPaciente.php") ?>
 
   <div class="container mt-5">
     <div class="row justify-content-center">
@@ -23,29 +23,57 @@
           </div>
         </div>
 
+        <div id="citasResult" class="mb-3"></div>
+
         <div class="row mb-4">
           <div class="col-4">
             <a type="button" class="btn btn-nuevo" href="RegistrarCita.html">+ Registrar Cita</a>
           </div>
         </div>
 
-        <table class="table custom-table">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th>Servicio</th>
-              <th>Especialidad</th>
-              <th>Médico</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-        </table>
+        <div class="table-responsive">
+          <table class="table custom-table" id="citasTable">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Servicio</th>
+                <th>Especialidad</th>
+                <th>Médico</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Las citas se cargarán aquí via AJAX -->
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
+  <!-- Modal de Confirmación para Cancelar -->
+  <div class="modal fade" id="modalConfirmacion" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar Cancelación</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          ¿Está seguro de que desea cancelar esta cita?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-danger" id="confirmarCancelacion">Sí, Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/citas.js"></script>
+</body>
 </html>

@@ -22,7 +22,8 @@
         <a class="nav-link" href="Vacunas.php">Vacunas</a>
       </div>
       <div class="d-flex align-items-center">
-        <a href="../Registro/Login.php" class="text-black me-3 text-decoration-none">Cerrar sesión</a>
+        <a href="../router.php?action=logout" class="text-black me-3 text-decoration-none" 
+                    onclick="return confirm('Esta seguro que desea cerrar sesion?')">Cerrar sesion</a>
       </div>
     </div>
   </nav>
@@ -35,11 +36,8 @@
         <div class="row mb-4">
           <div class="col-md-4 mb-3">
             <label class="form-label fw-bold">Servicio</label>
-            <select class="form-select">
+            <select class="form-select" id="servicio">
               <option selected></option>
-              <option value="1">Consulta General</option>
-              <option value="2">Especialidad</option>
-              <option value="3">Emergencia</option>
             </select>
           </div>
 
@@ -50,15 +48,15 @@
 
           <div class="col-md-4 mb-3">
             <label class="form-label fw-bold">Hora</label>
-            <select class="form-select">
+            <select class="form-select" id="hora">
               <option selected></option>
-              <option value="1">08:00</option>
-              <option value="2">09:00</option>
-              <option value="3">10:00</option>
-              <option value="4">11:00</option>
-              <option value="5">14:00</option>
-              <option value="6">15:00</option>
-              <option value="7">16:00</option>
+              <option value="08:00:00">08:00</option>
+              <option value="09:00:00">09:00</option>
+              <option value="10:00:00">10:00</option>
+              <option value="11:00:00">11:00</option>
+              <option value="14:00:00">14:00</option>
+              <option value="15:00:00">15:00</option>
+              <option value="16:00:00">16:00</option>
             </select>
           </div>
         </div>
@@ -66,12 +64,8 @@
         <div class="row mb-4">
           <div class="col-md-4 mb-3">
             <label class="form-label fw-bold">Especialidad</label>
-            <select class="form-select">
+            <select class="form-select" id="especialidad">
               <option selected></option>
-              <option value="1">Cardiología</option>
-              <option value="2">Pediatría</option>
-              <option value="3">Neurología</option>
-              <option value="4">Ginecología</option>
             </select>
           </div>
 
@@ -86,15 +80,18 @@
         <div class="row">
           <div class="col-12 text-center">
             <button type="button" class="btn btn-register">Registrar Cita</button>
+            <button type="button" id="cancelEdit" class="btn btn-secondary" style="display:none;">Cancelar</button>
           </div>
         </div>
+
+        <div id="citaResult" class="mt-3"></div>
       </div>
     </div>
   </div>
 
+  <script src="../js/jquery-3.7.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-  
-  <script src="../js/scripts.js" defer></script>
+  <script src="../js/citas.js"></script>
 </body>
 
 </html>

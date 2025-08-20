@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-07-2025 a las 04:29:26
+-- Tiempo de generación: 20-08-2025 a las 07:41:30
 -- Versión del servidor: 8.0.41
 -- Versión de PHP: 8.2.12
 
@@ -96,7 +96,9 @@ INSERT INTO `cita` (`id_cita`, `fecha`, `hora`, `id_usuario`, `id_medico`, `id_s
 (51, '2025-09-22', '11:00 am', 24, 5, 11, 8, 3),
 (52, '2025-10-18', '2:45 pm', 25, 20, 12, 9, 3),
 (53, '2025-11-25', '4:15 pm', 26, 22, 13, 10, 3),
-(54, '2025-12-12', '8:15 am', 27, 14, 5, 2, 3);
+(54, '2025-12-12', '8:15 am', 27, 14, 5, 2, 3),
+(55, '2025-08-28', '15:00:00', 23, 21, 2, 10, 4),
+(56, '2025-08-27', '10:00:00', 23, 20, 12, 9, 1);
 
 -- --------------------------------------------------------
 
@@ -232,6 +234,43 @@ INSERT INTO `estado_civil` (`id_estado_civil`, `nombre`) VALUES
 (4, 'Viudo'),
 (5, 'Unión libre'),
 (6, 'Separado');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `expediente`
+--
+
+CREATE TABLE `expediente` (
+  `id_expediente` int NOT NULL,
+  `id_usuario` int NOT NULL,
+  `peso` varchar(10) DEFAULT NULL,
+  `altura` varchar(10) DEFAULT NULL,
+  `tipo_sangre` varchar(5) DEFAULT NULL,
+  `enfermedades` text,
+  `alergias` text,
+  `cirugias` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `expediente`
+--
+
+INSERT INTO `expediente` (`id_expediente`, `id_usuario`, `peso`, `altura`, `tipo_sangre`, `enfermedades`, `alergias`, `cirugias`) VALUES
+(1, 23, '72kg', '1.75m', 'O+', 'Hipertensión', 'Ninguna', 'Apendicectomía'),
+(2, 24, '80kg', '1.80m', 'A+', 'Diabetes tipo 2', 'Penicilina', 'Ninguna'),
+(3, 25, '68kg', '1.70m', 'B-', 'Ninguna', 'Mariscos', 'Fractura pierna'),
+(4, 26, '85kg', '1.78m', 'AB+', 'Asma', 'Ninguna', 'Colecistectomía'),
+(5, 27, '60kg', '1.65m', 'O-', 'Ninguna', 'Polvo', 'Cesárea'),
+(6, 28, '70kg', '1.72m', 'A-', 'Migrañas', 'Ninguna', 'Ninguna'),
+(7, 29, '58kg', '1.60m', 'O+', 'Hipotiroidismo', 'Gluten', 'Ninguna'),
+(8, 30, '62kg', '1.63m', 'B+', 'Ninguna', 'Polen', 'Apendicectomía'),
+(9, 31, '75kg', '1.82m', 'O+', 'Colesterol alto', 'Ninguna', 'Ninguna'),
+(10, 32, '90kg', '1.85m', 'AB-', 'Hipertensión', 'Ninguna', 'Hernia'),
+(11, 33, '78kg', '1.77m', 'A+', 'Ninguna', 'Ninguna', 'Ninguna'),
+(12, 34, '55kg', '1.62m', 'O-', 'Asma', 'Ácaros', 'Ninguna'),
+(13, 35, '82kg', '1.74m', 'B+', 'Artritis', 'Ninguna', 'Bypass coronario'),
+(14, 36, '68kg', '1.68m', 'O+', 'Ninguna', 'Lácteos', 'Ninguna');
 
 -- --------------------------------------------------------
 
@@ -410,6 +449,45 @@ INSERT INTO `medicamento_paciente` (`id_medicamento_paciente`, `nombre_completo`
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `medico_especialidad`
+--
+
+CREATE TABLE `medico_especialidad` (
+  `id_medico_especialidad` int NOT NULL,
+  `id_medico` int NOT NULL,
+  `id_especialidad` int NOT NULL,
+  `id_estado` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `medico_especialidad`
+--
+
+INSERT INTO `medico_especialidad` (`id_medico_especialidad`, `id_medico`, `id_especialidad`, `id_estado`) VALUES
+(1, 3, 2, 1),
+(2, 4, 2, 1),
+(3, 5, 1, 1),
+(4, 6, 1, 1),
+(5, 7, 3, 1),
+(6, 8, 3, 1),
+(7, 9, 4, 1),
+(8, 10, 4, 1),
+(9, 11, 5, 1),
+(10, 12, 5, 1),
+(11, 13, 6, 1),
+(12, 14, 6, 1),
+(13, 15, 7, 1),
+(14, 16, 7, 1),
+(15, 17, 8, 1),
+(16, 18, 8, 1),
+(17, 19, 9, 1),
+(18, 20, 9, 1),
+(19, 21, 10, 1),
+(20, 22, 10, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `rol`
 --
 
@@ -467,14 +545,14 @@ INSERT INTO `servicio` (`id_servicio`, `nombre`) VALUES
 
 CREATE TABLE `usuario` (
   `id_usuario` int NOT NULL,
-  `cedula_usuario` int NOT NULL,
+  `cedula_usuario` varchar(20) NOT NULL,
   `nombre` varchar(50) NOT NULL,
   `apellidos` varchar(100) NOT NULL,
   `correo` varchar(50) NOT NULL,
-  `telefono` int NOT NULL,
+  `telefono` varchar(15) DEFAULT NULL,
   `fecha_nacimiento` date DEFAULT NULL,
   `direccion` varchar(200) NOT NULL,
-  `contrasena` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `contrasena` varchar(255) NOT NULL,
   `id_genero` int DEFAULT NULL,
   `id_estado_civil` int DEFAULT NULL,
   `id_rol` int NOT NULL,
@@ -486,42 +564,42 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `cedula_usuario`, `nombre`, `apellidos`, `correo`, `telefono`, `fecha_nacimiento`, `direccion`, `contrasena`, `id_genero`, `id_estado_civil`, `id_rol`, `id_estado`) VALUES
-(1, 123456789, 'Carlos', 'Rodríguez Pérez', 'carlos.admin@hospital.com', 22345678, NULL, 'San José, Costa Rica', 'admin123', NULL, NULL, 1, 1),
-(2, 987654321, 'María', 'González López', 'maria.admin@hospital.com', 22876543, NULL, 'Cartago, Costa Rica', 'admin456', NULL, NULL, 1, 1),
-(3, 456789123, 'Juan', 'Hernández Mora', 'juan.hernandez@hospital.com', 88234567, NULL, 'San José, Escazú', 'medico123', NULL, NULL, 2, 1),
-(4, 789123456, 'Ana', 'Vargas Solano', 'ana.vargas@hospital.com', 87654321, NULL, 'Cartago, Centro', 'medico456', NULL, NULL, 2, 1),
-(5, 321654987, 'Dr. Roberto', 'Jiménez Castro', 'roberto.jimenez@hospital.com', 89123456, NULL, 'Alajuela, Centro', 'medico789', NULL, NULL, 2, 1),
-(6, 654987321, 'Dra. Carmen', 'Rojas Vega', 'carmen.rojas@hospital.com', 88765432, NULL, 'Heredia, San Pablo', 'medico321', NULL, NULL, 2, 1),
-(7, 147258369, 'Dr. Luis', 'Fernández Chacón', 'luis.fernandez@hospital.com', 88147258, NULL, 'San José, Santa Ana', 'cardio123', NULL, NULL, 2, 1),
-(8, 963852741, 'Dra. Silvia', 'Ramírez Gutiérrez', 'silvia.ramirez@hospital.com', 87963852, NULL, 'Cartago, Paraíso', 'cardio456', NULL, NULL, 2, 1),
-(9, 258147963, 'Dr. Mario', 'Castillo Vega', 'mario.castillo@hospital.com', 89258147, NULL, 'Alajuela, San Carlos', 'neumo123', NULL, NULL, 2, 1),
-(10, 741963852, 'Dra. Patricia', 'Moreno Sánchez', 'patricia.moreno@hospital.com', 88741963, NULL, 'Puntarenas, Esparza', 'neumo456', NULL, NULL, 2, 1),
-(11, 369258147, 'Dr. Carlos', 'Delgado Pérez', 'carlos.delgado@hospital.com', 87369258, NULL, 'Heredia, Flores', 'gastro123', NULL, NULL, 2, 1),
-(12, 852741963, 'Dra. Mónica', 'Arias Campos', 'monica.arias@hospital.com', 89852741, NULL, 'Guanacaste, Nicoya', 'gastro456', NULL, NULL, 2, 1),
-(13, 147852963, 'Dr. Francisco', 'Solano Miranda', 'francisco.solano@hospital.com', 88147852, NULL, 'San José, Moravia', 'neuro123', NULL, NULL, 2, 1),
-(14, 963741852, 'Dra. Rebeca', 'Quesada Torres', 'rebeca.quesada@hospital.com', 87963741, NULL, 'Limón, Siquirres', 'neuro456', NULL, NULL, 2, 1),
-(15, 258963741, 'Dr. Gerardo', 'Brenes Elizondo', 'gerardo.brenes@hospital.com', 89258963, NULL, 'Cartago, Turrialba', 'reuma123', NULL, NULL, 2, 1),
-(16, 741852963, 'Dra. Verónica', 'Madrigal Rojas', 'veronica.madrigal@hospital.com', 88741852, NULL, 'San José, Guadalupe', 'reuma456', NULL, NULL, 2, 1),
-(17, 369741852, 'Dr. Rafael', 'Cordero Villalobos', 'rafael.cordero@hospital.com', 87369741, NULL, 'Alajuela, Grecia', 'endo123', NULL, NULL, 2, 1),
-(18, 852963741, 'Dra. Alejandra', 'Salas Bonilla', 'alejandra.salas@hospital.com', 89852963, NULL, 'Heredia, San Rafael', 'endo456', NULL, NULL, 2, 1),
-(19, 147963741, 'Dr. Esteban', 'Picado Castro', 'esteban.picado@hospital.com', 88147963, NULL, 'Puntarenas, Quepos', 'general123', NULL, NULL, 2, 1),
-(20, 963852147, 'Dra. Karla', 'Núñez Fallas', 'karla.nunez@hospital.com', 87963852, NULL, 'Guanacaste, Santa Cruz', 'general456', NULL, NULL, 2, 1),
-(21, 258741369, 'Dr. Daniel', 'Trejos Monge', 'daniel.trejos@hospital.com', 89258741, NULL, 'San José, Pavas', 'psico123', NULL, NULL, 2, 1),
-(22, 741369258, 'Dra. Adriana', 'Chaves Alpízar', 'adriana.chaves@hospital.com', 88741369, NULL, 'Cartago, La Unión', 'psico456', NULL, NULL, 2, 1),
-(23, 111222333, 'José', 'Ramírez Quesada', 'jose.ramirez@email.com', 88111222, '1985-03-15', 'Cartago, Paraíso', 'paciente123', 1, 2, 3, 1),
-(24, 444555666, 'Miguel', 'Sandoval Torres', 'miguel.sandoval@email.com', 87333444, '1978-11-22', 'San José, Desamparados', 'paciente456', 1, 1, 3, 1),
-(25, 777888999, 'Carlos', 'Méndez Brenes', 'carlos.mendez@email.com', 89555666, '1992-07-08', 'Alajuela, San Ramón', 'paciente789', 1, 3, 3, 1),
-(26, 101112131, 'Fernando', 'Castro Elizondo', 'fernando.castro@email.com', 88777888, '1965-12-03', 'Puntarenas, Centro', 'paciente321', 1, 4, 3, 1),
-(27, 222333444, 'María', 'Córdoba Salas', 'maria.cordoba@email.com', 88222333, '1990-08-25', 'Cartago, La Unión', 'paciente654', 2, 2, 3, 1),
-(28, 555666777, 'Ana', 'Montero Villalobos', 'ana.montero@email.com', 87444555, '1975-01-18', 'Heredia, Barva', 'paciente987', 2, 1, 3, 1),
-(29, 888999000, 'Lucía', 'Araya Fonseca', 'lucia.araya@email.com', 89666777, '1988-09-12', 'Guanacaste, Liberia', 'paciente147', 2, 5, 3, 1),
-(30, 141516171, 'Patricia', 'Morales Jiménez', 'patricia.morales@email.com', 88888999, '1995-04-30', 'Limón, Puerto Viejo', 'paciente258', 2, 3, 3, 1),
-(31, 181920212, 'Alex', 'Rivera Campos', 'alex.rivera@email.com', 89000111, '1993-06-14', 'San José, Tibás', 'paciente369', 3, 1, 3, 1),
-(32, 223242526, 'Sam', 'Delgado Núñez', 'sam.delgado@email.com', 88123456, '1987-10-07', 'Cartago, Turrialba', 'paciente741', 4, 2, 3, 1),
-(33, 272829303, 'Diego', 'Chacón Madrigal', 'diego.chacon@email.com', 87987654, '2000-02-20', 'Alajuela, Atenas', 'paciente852', 1, 1, 3, 1),
-(34, 313233343, 'Sofía', 'Picado Rojas', 'sofia.picado@email.com', 89234567, '1999-12-10', 'Heredia, Santo Domingo', 'paciente963', 2, 1, 3, 1),
-(35, 353637383, 'Eduardo', 'Blanco Cordero', 'eduardo.blanco@email.com', 88345678, '1950-05-25', 'San José, Curridabat', 'paciente074', 1, 4, 3, 1),
-(36, 394041424, 'Elena', 'Vargas Trejos', 'elena.vargas@email.com', 87456789, '1948-03-08', 'Cartago, Oreamuno', 'paciente185', 2, 4, 3, 1);
+(1, '123456789', 'Carlos', 'Rodríguez Pérez', 'carlos.admin@hospital.com', '22345678', NULL, 'San José, Costa Rica', 'admin123', NULL, NULL, 1, 1),
+(2, '987654321', 'María', 'González López', 'maria.admin@hospital.com', '22876543', NULL, 'Cartago, Costa Rica', 'admin456', NULL, NULL, 1, 1),
+(3, '456789123', 'Juan', 'Hernández Mora', 'juan.hernandez@hospital.com', '88234567', NULL, 'San José, Escazú', 'medico123', NULL, NULL, 2, 1),
+(4, '789123456', 'Ana', 'Vargas Solano', 'ana.vargas@hospital.com', '87654321', NULL, 'Cartago, Centro', 'medico456', NULL, NULL, 2, 1),
+(5, '321654987', 'Dr. Roberto', 'Jiménez Castro', 'roberto.jimenez@hospital.com', '89123456', NULL, 'Alajuela, Centro', 'medico789', NULL, NULL, 2, 1),
+(6, '654987321', 'Dra. Carmen', 'Rojas Vega', 'carmen.rojas@hospital.com', '88765432', NULL, 'Heredia, San Pablo', 'medico321', NULL, NULL, 2, 1),
+(7, '147258369', 'Dr. Luis', 'Fernández Chacón', 'luis.fernandez@hospital.com', '88147258', NULL, 'San José, Santa Ana', 'cardio123', NULL, NULL, 2, 1),
+(8, '963852741', 'Dra. Silvia', 'Ramírez Gutiérrez', 'silvia.ramirez@hospital.com', '87963852', NULL, 'Cartago, Paraíso', 'cardio456', NULL, NULL, 2, 1),
+(9, '258147963', 'Dr. Mario', 'Castillo Vega', 'mario.castillo@hospital.com', '89258147', NULL, 'Alajuela, San Carlos', 'neumo123', NULL, NULL, 2, 1),
+(10, '741963852', 'Dra. Patricia', 'Moreno Sánchez', 'patricia.moreno@hospital.com', '88741963', NULL, 'Puntarenas, Esparza', 'neumo456', NULL, NULL, 2, 1),
+(11, '369258147', 'Dr. Carlos', 'Delgado Pérez', 'carlos.delgado@hospital.com', '87369258', NULL, 'Heredia, Flores', 'gastro123', NULL, NULL, 2, 1),
+(12, '852741963', 'Dra. Mónica', 'Arias Campos', 'monica.arias@hospital.com', '89852741', NULL, 'Guanacaste, Nicoya', 'gastro456', NULL, NULL, 2, 1),
+(13, '147852963', 'Dr. Francisco', 'Solano Miranda', 'francisco.solano@hospital.com', '88147852', NULL, 'San José, Moravia', 'neuro123', NULL, NULL, 2, 1),
+(14, '963741852', 'Dra. Rebeca', 'Quesada Torres', 'rebeca.quesada@hospital.com', '87963741', NULL, 'Limón, Siquirres', '$2y$10$PZkujAod2Hp9D6uQJNWyYOvyvIv9NKnSr/96xPPp6/aM7GOyTW0ly', NULL, NULL, 2, 1),
+(15, '258963741', 'Dr. Gerardo', 'Brenes Elizondo', 'gerardo.brenes@hospital.com', '89258963', NULL, 'Cartago, Turrialba', 'reuma123', NULL, NULL, 2, 1),
+(16, '741852963', 'Dra. Verónica', 'Madrigal Rojas', 'veronica.madrigal@hospital.com', '88741852', NULL, 'San José, Guadalupe', 'reuma456', NULL, NULL, 2, 1),
+(17, '369741852', 'Dr. Rafael', 'Cordero Villalobos', 'rafael.cordero@hospital.com', '87369741', NULL, 'Alajuela, Grecia', 'endo123', NULL, NULL, 2, 1),
+(18, '852963741', 'Dra. Alejandra', 'Salas Bonilla', 'alejandra.salas@hospital.com', '89852963', NULL, 'Heredia, San Rafael', 'endo456', NULL, NULL, 2, 1),
+(19, '147963741', 'Dr. Esteban', 'Picado Castro', 'esteban.picado@hospital.com', '88147963', NULL, 'Puntarenas, Quepos', 'general123', NULL, NULL, 2, 1),
+(20, '963852147', 'Dra. Karla', 'Núñez Fallas', 'karla.nunez@hospital.com', '87963852', NULL, 'Guanacaste, Santa Cruz', 'general456', NULL, NULL, 2, 1),
+(21, '258741369', 'Dr. Daniel', 'Trejos Monge', 'daniel.trejos@hospital.com', '89258741', NULL, 'San José, Pavas', 'psico123', NULL, NULL, 2, 1),
+(22, '741369258', 'Dra. Adriana', 'Chaves Alpízar', 'adriana.chaves@hospital.com', '88741369', NULL, 'Cartago, La Unión', 'psico456', NULL, NULL, 2, 1),
+(23, '111222333', 'José', 'Ramírez Quesada', 'jose.ramirez@email.com', '88111222', '1985-03-15', 'Cartago, Paraíso', '$2y$10$kH2xfaWw5NI3whh6BJmKX.iyY0DPsJD95vsPqU6hUr/s0BCr4nmh.', 1, 2, 3, 1),
+(24, '444555666', 'Miguel', 'Sandoval Torres', 'miguel.sandoval@email.com', '87333444', '1978-11-22', 'San José, Desamparados', 'paciente456', 1, 1, 3, 1),
+(25, '777888999', 'Carlos', 'Méndez Brenes', 'carlos.mendez@email.com', '89555666', '1992-07-08', 'Alajuela, San Ramón', 'paciente789', 1, 3, 3, 1),
+(26, '101112131', 'Fernando', 'Castro Elizondo', 'fernando.castro@email.com', '88777888', '1965-12-03', 'Puntarenas, Centro', 'paciente321', 1, 4, 3, 1),
+(27, '222333444', 'María', 'Córdoba Salas', 'maria.cordoba@email.com', '88222333', '1990-08-25', 'Cartago, La Unión', 'paciente654', 2, 2, 3, 1),
+(28, '555666777', 'Ana', 'Montero Villalobos', 'ana.montero@email.com', '87444555', '1975-01-18', 'Heredia, Barva', 'paciente987', 2, 1, 3, 1),
+(29, '888999000', 'Lucía', 'Araya Fonseca', 'lucia.araya@email.com', '89666777', '1988-09-12', 'Guanacaste, Liberia', 'paciente147', 2, 5, 3, 1),
+(30, '141516171', 'Patricia', 'Morales Jiménez', 'patricia.morales@email.com', '88888999', '1995-04-30', 'Limón, Puerto Viejo', '$2y$10$65xEpn5tk24R8ESWZUfrg.v9EYVf5HM5Ng5cRHvFeFIZLfnoFup7q', 2, 3, 3, 1),
+(31, '181920212', 'Alex', 'Rivera Campos', 'alex.rivera@email.com', '89000111', '1993-06-14', 'San José, Tibás', 'paciente369', 3, 1, 3, 1),
+(32, '223242526', 'Sam', 'Delgado Núñez', 'sam.delgado@email.com', '88123456', '1987-10-07', 'Cartago, Turrialba', 'paciente741', 4, 2, 3, 1),
+(33, '272829303', 'Diego', 'Chacón Madrigal', 'diego.chacon@email.com', '87987654', '2000-02-20', 'Alajuela, Atenas', 'paciente852', 1, 1, 3, 1),
+(34, '313233343', 'Sofía', 'Picado Rojas', 'sofia.picado@email.com', '89234567', '1999-12-10', 'Heredia, Santo Domingo', 'paciente963', 2, 1, 3, 1),
+(35, '353637383', 'Eduardo', 'Blanco Cordero', 'eduardo.blanco@email.com', '88345678', '1950-05-25', 'San José, Curridabat', '$2y$10$0o0934cg7G2NcFruW670yefRz8BFdAyr14ByXWORcJ0jhvwbivQ7G', 1, 4, 3, 1),
+(36, '394041424', 'Elena', 'Vargas Trejos', 'elena.vargas@email.com', '87456789', '1948-03-08', 'Cartago, Oreamuno', 'paciente185', 2, 4, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -700,6 +778,13 @@ ALTER TABLE `estado_civil`
   ADD PRIMARY KEY (`id_estado_civil`);
 
 --
+-- Indices de la tabla `expediente`
+--
+ALTER TABLE `expediente`
+  ADD PRIMARY KEY (`id_expediente`),
+  ADD UNIQUE KEY `unique_usuario` (`id_usuario`);
+
+--
 -- Indices de la tabla `forma_farmaceutica`
 --
 ALTER TABLE `forma_farmaceutica`
@@ -735,6 +820,15 @@ ALTER TABLE `medicamento_paciente`
   ADD KEY `estado_medicmento_paciente` (`id_estado`),
   ADD KEY `medicamento_paciente` (`id_medicamento`),
   ADD KEY `medicamento_usuario` (`id_paciente`);
+
+--
+-- Indices de la tabla `medico_especialidad`
+--
+ALTER TABLE `medico_especialidad`
+  ADD PRIMARY KEY (`id_medico_especialidad`),
+  ADD KEY `medico_especialidad` (`id_medico`),
+  ADD KEY `especialidad_medico` (`id_especialidad`),
+  ADD KEY `medico_especialidad_estado` (`id_estado`);
 
 --
 -- Indices de la tabla `rol`
@@ -791,7 +885,7 @@ ALTER TABLE `via_administracion`
 -- AUTO_INCREMENT de la tabla `cita`
 --
 ALTER TABLE `cita`
-  MODIFY `id_cita` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id_cita` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT de la tabla `enfermedad`
@@ -824,6 +918,12 @@ ALTER TABLE `estado_civil`
   MODIFY `id_estado_civil` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT de la tabla `expediente`
+--
+ALTER TABLE `expediente`
+  MODIFY `id_expediente` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT de la tabla `forma_farmaceutica`
 --
 ALTER TABLE `forma_farmaceutica`
@@ -852,6 +952,12 @@ ALTER TABLE `medicamento`
 --
 ALTER TABLE `medicamento_paciente`
   MODIFY `id_medicamento_paciente` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT de la tabla `medico_especialidad`
+--
+ALTER TABLE `medico_especialidad`
+  MODIFY `id_medico_especialidad` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `rol`
@@ -904,6 +1010,12 @@ ALTER TABLE `cita`
   ADD CONSTRAINT `usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
+-- Filtros para la tabla `expediente`
+--
+ALTER TABLE `expediente`
+  ADD CONSTRAINT `expediente_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE CASCADE;
+
+--
 -- Filtros para la tabla `medicamento`
 --
 ALTER TABLE `medicamento`
@@ -919,6 +1031,14 @@ ALTER TABLE `medicamento_paciente`
   ADD CONSTRAINT `estado_medicmento_paciente` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id_estado`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `medicamento_paciente` FOREIGN KEY (`id_medicamento`) REFERENCES `medicamento` (`id_medicamento`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `medicamento_usuario` FOREIGN KEY (`id_paciente`) REFERENCES `usuario` (`id_usuario`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Filtros para la tabla `medico_especialidad`
+--
+ALTER TABLE `medico_especialidad`
+  ADD CONSTRAINT `especialidad_medico` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidad` (`id_especialidad`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `medico_especialidad` FOREIGN KEY (`id_medico`) REFERENCES `usuario` (`id_usuario`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `medico_especialidad_estado` FOREIGN KEY (`id_estado`) REFERENCES `estado` (`id_estado`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Filtros para la tabla `rol`

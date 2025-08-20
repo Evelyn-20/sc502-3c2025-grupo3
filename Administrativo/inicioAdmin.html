@@ -24,7 +24,8 @@
         <a class="nav-link" href="Vacunas.php">Vacunas</a>
       </div>
       <div class="d-flex align-items-center">
-        <a href="../Registro/Login.php" class="text-black me-3 text-decoration-none">Cerrar sesión</a>
+        <a href="../router.php?action=logout" class="text-black me-3 text-decoration-none" 
+                    onclick="return confirm('Esta seguro que desea cerrar sesion?')">Cerrar sesion</a>
       </div>
     </div>
   </nav>
@@ -63,7 +64,7 @@
                         <i class="bi bi-calendar-check custom-icon fs-1 mb-3"></i>
                         <h5 class="card-title">Citas</h5>
                         <p class="card-text">Registra y gestiona citas médicas para pacientes.</p>
-                        <a href="Citas.html" class="btn btn-nuevo btn-card w-100">Gestionar Citas</a>
+                        <a href="Citas.php" class="btn btn-nuevo btn-card w-100">Gestionar Citas</a>
                     </div>
                 </div>
             </div>

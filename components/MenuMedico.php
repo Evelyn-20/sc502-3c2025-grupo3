@@ -10,7 +10,8 @@
             <a class="nav-link" href="Vacunas.php">Vacunas</a>
         </div>
         <div class="d-flex align-items-center">
-            <a href="../Registro/Login.php" class="text-black me-3 text-decoration-none">Cerrar sesión</a>
+            <a href="../router.php?action=logout" class="text-black me-3 text-decoration-none" 
+               onclick="return confirm('¿Está seguro que desea cerrar sesión?')">Cerrar sesión</a>
         </div>
     </div>
 </nav>

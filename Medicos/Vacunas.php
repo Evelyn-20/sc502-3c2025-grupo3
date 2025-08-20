@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <?php include("MenuMedico.php") ?>
+  <?php include("../components/MenuMedico.php") ?>
 
   <div class="container mt-5">
     <div class="row justify-content-center">

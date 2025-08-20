@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 <body>
-  <?php include("MenuAdmin.php") ?>
+  <?php include("../components/MenuAdmin.php") ?>
   
   <div class="container mt-5">
     <div class="row justify-content-center">
