@@ -13,7 +13,7 @@ class CitaController {
         $id_medico = $_POST['id_medico'] ?? 0;
         $id_servicio = $_POST['id_servicio'] ?? 0;
         $id_especialidad = $_POST['id_especialidad'] ?? 0;
-        $id_estado = $_POST['id_estado'] ?? 1;
+        $id_estado = $_POST['id_estado'] ?? 3; // CAMBIO: De 1 a 3 (Pendiente)
 
         if ($cita->registrarCitaAdmin($fecha, $hora, $cedula_paciente, $id_medico, $id_servicio, $id_especialidad, $id_estado)) {
             echo json_encode(['status' => 'success', 'message' => 'Cita registrada exitosamente']);
@@ -30,7 +30,7 @@ class CitaController {
         $hora = $_POST['hora'] ?? '';
         $id_servicio = $_POST['id_servicio'] ?? 0;
         $id_especialidad = $_POST['id_especialidad'] ?? 0;
-        $id_estado = $_POST['id_estado'] ?? 1;
+        $id_estado = $_POST['id_estado'] ?? 3; // CAMBIO: De 1 a 3 (Pendiente)
 
         if ($cita->registrarCitaPaciente($fecha, $hora, $id_servicio, $id_especialidad, $id_estado)) {
             echo json_encode(['status' => 'success', 'message' => 'Cita registrada exitosamente']);
@@ -91,7 +91,7 @@ class CitaController {
         $hora = $_POST['hora'] ?? '';
         $id_servicio = $_POST['id_servicio'] ?? 0;
         $id_especialidad = $_POST['id_especialidad'] ?? 0;
-        $id_estado = $_POST['id_estado'] ?? 1;
+        $id_estado = $_POST['id_estado'] ?? 3; // CAMBIO: De 1 a 3 (Pendiente)
 
         // NUEVO: Buscar un médico disponible para la nueva fecha/hora/especialidad
         $id_medico = $cita->buscarMedicoDisponible($id_especialidad, $fecha, $hora);

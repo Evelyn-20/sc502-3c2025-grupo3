@@ -8,8 +8,7 @@ class Cita {
         $this->db = Database::connect();
     }
 
-    // Registrar cita para paciente
-    public function registrarCitaPaciente($fecha, $hora, $id_servicio, $id_especialidad, $id_estado = 1) {
+    public function registrarCitaPaciente($fecha, $hora, $id_servicio, $id_especialidad, $id_estado = 3) { // CAMBIO: De 1 a 3
         // Obtener ID del usuario desde la sesión
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -40,7 +39,7 @@ class Cita {
     }
 
     // Registrar cita para admin
-    public function registrarCitaAdmin($fecha, $hora, $cedula_paciente, $id_medico, $id_servicio, $id_especialidad, $id_estado = 1) {
+    public function registrarCitaAdmin($fecha, $hora, $cedula_paciente, $id_medico, $id_servicio, $id_especialidad, $id_estado = 3) { // CAMBIO: De 1 a 3
         // Buscar el ID del paciente por cédula
         $paciente = $this->buscarPacientePorCedula($cedula_paciente);
         if (!$paciente) {

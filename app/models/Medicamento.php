@@ -20,22 +20,22 @@ class Medicamento {
     }
 
     public function obtenerTodos() {
-    $stmt = $this->db->prepare("
-        SELECT m.*, 
-               ff.nombre as forma_farmaceutica,
-               gt.nombre as grupo_terapeutico,
-               va.nombre as via_administracion,
-               e.nombre as estado
-        FROM medicamento m
-        LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
-        LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
-        LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
-        LEFT JOIN estado e ON m.id_estado = e.id_estado
-        ORDER BY m.nombre ASC
-    ");
-    $stmt->execute();
-    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-}
+        $stmt = $this->db->prepare("
+            SELECT m.*, 
+                   ff.nombre as forma_farmaceutica,
+                   gt.nombre as grupo_terapeutico,
+                   va.nombre as via_administracion,
+                   e.nombre as estado
+            FROM medicamento m
+            LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+            LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+            LEFT JOIN estado e ON m.id_estado = e.id_estado
+            ORDER BY m.nombre ASC
+        ");
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
 
     // Obtener medicamentos del usuario en sesión
     public function obtenerMedicamentosPacienteSesion() {
@@ -47,18 +47,48 @@ class Medicamento {
             return [];
         }
         
-        return $this->obtenerMedicamentosPaciente($_SESSION['user']['id']);
+        return $this->obtenerMisMedicamentos($_SESSION['user']['id']);
     }
 
     // Obtener medicamentos de un paciente específico
     public function obtenerMedicamentosPaciente($id_paciente) {
         $stmt = $this->db->prepare("
             SELECT mp.*, 
-                   m.nombre as nombre_medicamento,
-                   ff.nombre as forma_farmaceutica,
-                   gt.nombre as grupo_terapeutico,
-                   va.nombre as via_administracion,
-                   e.nombre as estado
+                m.nombre as nombre_medicamento,
+                ff.nombre as forma_farmaceutica,
+                gt.nombre as grupo_terapeutico,
+                va.nombre as via_administracion,
+                e.nombre as estado,
+                CONCAT(u.nombre, ' ', u.apellidos) as nombre_paciente
+            FROM medicamento_paciente mp
+            INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
+            INNER JOIN usuario u ON mp.id_paciente = u.id_usuario
+            LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+            LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+            LEFT JOIN estado e ON mp.id_estado = e.id_estado
+            WHERE mp.id_paciente = ?
+            ORDER BY mp.fecha_preescripcion DESC
+        ");
+        $stmt->bind_param("i", $id_paciente);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function obtenerMisMedicamentos($id_paciente) {
+        $stmt = $this->db->prepare("
+            SELECT mp.id_medicamento_paciente,
+                mp.fecha_preescripcion,
+                mp.tiempo_tratamiento, 
+                mp.indicaciones,
+                mp.id_estado,
+                mp.id_medicamento,
+                mp.id_paciente,
+                m.nombre as nombre_medicamento,
+                ff.nombre as forma_farmaceutica,
+                gt.nombre as grupo_terapeutico,
+                va.nombre as via_administracion,
+                e.nombre as estado
             FROM medicamento_paciente mp
             INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
             LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
@@ -77,12 +107,14 @@ class Medicamento {
     public function obtenerMedicamentoPacientePorId($id_medicamento_paciente) {
         $stmt = $this->db->prepare("
             SELECT mp.*, 
-                   m.nombre as nombre_medicamento,
-                   ff.nombre as forma_farmaceutica,
-                   gt.nombre as grupo_terapeutico,
-                   va.nombre as via_administracion
+                m.nombre as nombre_medicamento,
+                ff.nombre as forma_farmaceutica,
+                gt.nombre as grupo_terapeutico,
+                va.nombre as via_administracion,
+                CONCAT(u.nombre, ' ', u.apellidos) as nombre_paciente
             FROM medicamento_paciente mp
             INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
+            INNER JOIN usuario u ON mp.id_paciente = u.id_usuario
             LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
             LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
             LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
@@ -119,19 +151,25 @@ class Medicamento {
         return $stmt->execute();
     }
 
-    // Obtener medicamentos activos de un paciente
+    // Obtener medicamentos activos de un paciente - CORREGIDO
     public function obtenerMedicamentosActivosPaciente($id_paciente) {
         $stmt = $this->db->prepare("
-            SELECT mp.*, 
-                   m.nombre as nombre_medicamento,
-                   ff.nombre as forma_farmaceutica,
-                   gt.nombre as grupo_terapeutico,
-                   va.nombre as via_administracion
+            SELECT mp.id_medicamento_paciente,
+                mp.fecha_preescripcion,
+                mp.tiempo_tratamiento, 
+                mp.indicaciones,
+                mp.id_estado,
+                mp.id_medicamento,
+                mp.id_paciente,
+                m.nombre as nombre_medicamento,
+                ff.nombre as forma_farmaceutica,
+                gt.nombre as grupo_terapeutico,
+                va.nombre as via_administracion
             FROM medicamento_paciente mp
             INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
             LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
             LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
-            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_va_administracion
             WHERE mp.id_paciente = ? AND mp.id_estado = 1
             ORDER BY mp.fecha_preescripcion DESC
         ");

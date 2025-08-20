@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Medicamentos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 
@@ -39,6 +40,24 @@
         </table>
 
         <div id="medicamentosResult" class="mt-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para ver detalles de medicamento -->
+  <div class="modal fade" id="medicamentoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="border-radius: 20px; border: none;">
+        <div class="modal-header" style="background-color: #4B94F2; color: white; border-radius: 20px 20px 0 0; border: none;">
+          <h5 class="modal-title" style="font-weight: 500;">Detalles del Medicamento</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" style="padding: 30px; background-color: #f8f9fa;">
+          <div id="medicamentoDetalles"></div>
+        </div>
+        <div class="modal-footer" style="background-color: #f8f9fa; border: none; border-radius: 0 0 20px 20px; padding: 20px 30px;">
+          <button type="button" class="btn-register" style="padding: 8px 30px; font-size: 16px;" data-bs-dismiss="modal">Cerrar</button>
+        </div>
       </div>
     </div>
   </div>

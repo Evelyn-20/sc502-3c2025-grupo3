@@ -168,17 +168,28 @@ document.addEventListener("DOMContentLoaded", function() {
 // Inicializar la página según el contexto
 function initializePage() {
   console.log('Inicializando página...');
+  const currentPage = window.location.pathname;
+  const fileName = currentPage.split('/').pop();
   
-  // Si hay formulario de cita (RegistrarCita.html)
-  if (document.querySelector('.btn-register') || document.getElementById('servicio')) {
+  // Si es página de registro
+  if (fileName === 'RegistrarCita.html') {
     console.log('Detectado formulario de registro');
     loadFormData();
     setupDateRestrictions();
     initializeCalendar();
   }
   
+  // Si es página de actualización
+  else if (fileName === 'ActualizarCita.html') {
+    console.log('Detectado formulario de actualización');
+    loadFormData();
+    setupDateRestrictions();
+    initializeCalendar();
+    loadCitaForEditing();
+  }
+  
   // Si hay tabla de citas (HistorialCitas.php)
-  if (document.querySelector('.custom-table') || document.getElementById('citasTable')) {
+  else if (fileName === 'HistorialCitas.php' || document.querySelector('.custom-table') || document.getElementById('citasTable')) {
     console.log('Detectada tabla de citas');
     loadPatientAppointments();
   }
@@ -194,7 +205,23 @@ function setupEventListeners() {
   console.log('Configurando event listeners...');
 
   // Botón registrar cita
-  $(document).off('click', '.btn-register').on('click', '.btn-register', handleCitaSubmit);
+  $(document).off('click', '.btn-register').on('click', '.btn-register', function(e) {
+    if ($(this).attr('id') === 'btnActualizar') {
+      handleUpdateCita(e);
+    } else {
+      handleCitaSubmit(e);
+    }
+  });
+  
+  // Botón actualizar específico
+  $(document).off('click', '#btnActualizar').on('click', '#btnActualizar', handleUpdateCita);
+  
+  // Botón cancelar en actualización
+  $(document).off('click', '#btnCancelar').on('click', '#btnCancelar', function() {
+    if (confirm('¿Está seguro de que desea cancelar? Los cambios se perderán.')) {
+      window.location.href = 'HistorialCitas.php';
+    }
+  });
   
   // Cambios en selects para verificar disponibilidad
   $(document).off('change', '#servicio, #especialidad, #hora, #fecha').on('change', '#servicio, #especialidad, #hora, #fecha', function() {
@@ -208,9 +235,6 @@ function setupEventListeners() {
   
   // Configurar fecha mínima
   setupDateRestrictions();
-  
-  // Verificar cita para editar
-  setTimeout(checkForEditingCita, 1000);
 }
 
 // Configurar restricciones de fecha
@@ -255,7 +279,7 @@ function loadFormData() {
   loadServices();
 }
 
-// Cargar especialidades - CORREGIDO para usar el router
+// Cargar especialidades
 function loadSpecialties() {
   const url = determineRouterUrl('getSpecialties');
   console.log('Cargando especialidades desde:', url);
@@ -277,7 +301,7 @@ function loadSpecialties() {
   });
 }
 
-// Cargar servicios - CORREGIDO para usar el router
+// Cargar servicios
 function loadServices() {
   const url = determineRouterUrl('getServices');
   console.log('Cargando servicios desde:', url);
@@ -299,17 +323,14 @@ function loadServices() {
   });
 }
 
-// NUEVA FUNCIÓN: Determinar la URL del router según la ubicación actual
+// Determinar la URL del router según la ubicación actual
 function determineRouterUrl(action) {
   const currentPath = window.location.pathname;
   let basePath = '';
   
-  // Si estamos en una carpeta como 'Paciente', usar router relativo
   if (currentPath.includes('/Paciente/') || currentPath.includes('/paciente/')) {
     basePath = '../router.php';
-  } 
-  // Si estamos en la raíz
-  else {
+  } else {
     basePath = 'router.php';
   }
   
@@ -337,7 +358,7 @@ function populateSelect(select, data, valueField, textField) {
   }
 }
 
-// Verificar disponibilidad de cita - CORREGIDO
+// Verificar disponibilidad de cita
 function checkAvailability() {
   const especialidad = $('#especialidad').val();
   const fecha = $('#fecha').val();
@@ -373,36 +394,27 @@ function checkAvailability() {
   });
 }
 
-// Manejar envío del formulario
+// Manejar envío del formulario de REGISTRO
 function handleCitaSubmit(e) {
   e.preventDefault();
-  console.log('Enviando formulario de cita...');
+  console.log('Registrando nueva cita...');
   
-  // Recopilar datos del formulario
   const formData = {
     id_servicio: parseInt($('#servicio').val()),
     id_especialidad: parseInt($('#especialidad').val()),
     hora: $('#hora').val(),
     fecha: $('#fecha').val(),
-    id_estado: 1
+    id_estado: 3 // CAMBIO: De 1 a 3 (Pendiente)
   };
   
   console.log('Datos del formulario:', formData);
   
-  // Validaciones
   if (!formData.id_servicio || !formData.id_especialidad || !formData.hora || !formData.fecha) {
     alert('Por favor completa todos los campos obligatorios');
     return;
   }
   
-  const isEditing = editingCitaId !== null;
-  if (isEditing) {
-    formData.id_cita = editingCitaId;
-  }
-  
-  const action = isEditing ? 'updateCita' : 'createCitaPatient';
-  const url = determineRouterUrl(action);
-  
+  const url = determineRouterUrl('createCitaPatient');
   console.log('Enviando a:', url);
   
   $.ajax({
@@ -413,22 +425,18 @@ function handleCitaSubmit(e) {
     success: function(response) {
       console.log('Respuesta del servidor:', response);
       if (response.status === 'success') {
-        alert(isEditing ? 'Cita actualizada exitosamente' : 'Cita registrada exitosamente');
+        alert('Cita registrada exitosamente');
         
         // Limpiar formulario
         $('#servicio, #especialidad, #hora').val('');
         $('#fecha').val('');
-        
-        if (isEditing) {
-          cancelEdit();
-        }
         
         // Redireccionar al historial
         setTimeout(() => {
           window.location.href = 'HistorialCitas.php';
         }, 1000);
       } else {
-        alert(response.message || 'Error al procesar la cita');
+        alert(response.message || 'Error al registrar la cita');
       }
     },
     error: function(xhr, status, error) {
@@ -436,6 +444,124 @@ function handleCitaSubmit(e) {
       alert('Error de conexión con el servidor. Revisa la consola para más detalles.');
     }
   });
+}
+
+// Manejar envío del formulario de ACTUALIZACIÓN
+function handleUpdateCita(e) {
+  e.preventDefault();
+  console.log('Actualizando cita...');
+  
+  if (!editingCitaId) {
+    alert('Error: No se encontró el ID de la cita a actualizar');
+    return;
+  }
+  
+  const formData = {
+    id_cita: editingCitaId,
+    id_servicio: parseInt($('#servicio').val()),
+    id_especialidad: parseInt($('#especialidad').val()),
+    hora: $('#hora').val(),
+    fecha: $('#fecha').val(),
+    id_estado: 3 // CAMBIO: De 1 a 3 (Pendiente)
+  };
+  
+  console.log('Datos de actualización:', formData);
+  
+  if (!formData.id_servicio || !formData.id_especialidad || !formData.hora || !formData.fecha) {
+    alert('Por favor completa todos los campos obligatorios');
+    return;
+  }
+  
+  const url = determineRouterUrl('updateCita');
+  console.log('Enviando actualización a:', url);
+  
+  $.ajax({
+    url: url,
+    method: 'POST',
+    data: formData,
+    dataType: 'json',
+    success: function(response) {
+      console.log('Respuesta del servidor:', response);
+      if (response.status === 'success') {
+        alert('Cita actualizada exitosamente');
+        
+        // Redireccionar al historial
+        setTimeout(() => {
+          window.location.href = 'HistorialCitas.php';
+        }, 1000);
+      } else {
+        alert(response.message || 'Error al actualizar la cita');
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('Error AJAX:', error, xhr.responseText);
+      alert('Error de conexión con el servidor. Revisa la consola para más detalles.');
+    }
+  });
+}
+
+// Cargar cita para edición (solo en ActualizarCita.html)
+function loadCitaForEditing() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const citaId = urlParams.get('id');
+  
+  if (!citaId) {
+    alert('Error: No se especificó qué cita editar');
+    window.location.href = 'HistorialCitas.php';
+    return;
+  }
+  
+  editingCitaId = citaId;
+  showLoadingOverlay();
+  
+  const url = determineRouterUrl('showCita');
+  
+  $.ajax({
+    url: url,
+    method: 'GET',
+    data: { id: citaId },
+    dataType: 'json',
+    success: function(response) {
+      hideLoadingOverlay();
+      if (response.status === 'success') {
+        // Esperar un poco para que los selects se carguen
+        setTimeout(() => {
+          fillFormWithCitaData(response.data);
+        }, 1000);
+      } else {
+        alert('Error al cargar los datos de la cita');
+        window.location.href = 'HistorialCitas.php';
+      }
+    },
+    error: function(xhr, status, error) {
+      hideLoadingOverlay();
+      console.error('Error al cargar cita:', error);
+      alert('Error de conexión al cargar la cita');
+      window.location.href = 'HistorialCitas.php';
+    }
+  });
+}
+
+// Llenar formulario con datos de la cita
+function fillFormWithCitaData(cita) {
+  console.log('Llenando formulario con:', cita);
+  
+  $('#servicio').val(cita.id_servicio);
+  $('#especialidad').val(cita.id_especialidad);
+  $('#hora').val(cita.hora);
+  $('#fecha').val(cita.fecha);
+  
+  // Trigger change events para validaciones
+  $('#servicio, #especialidad, #hora, #fecha').trigger('change');
+}
+
+// Mostrar/ocultar overlay de carga
+function showLoadingOverlay() {
+  $('#loadingOverlay').show();
+}
+
+function hideLoadingOverlay() {
+  $('#loadingOverlay').hide();
 }
 
 // Cargar citas del paciente
@@ -477,14 +603,21 @@ function populateAppointmentsTable(citas) {
     const canCancel = canCancelAppointment(cita.id_estado);
     
     let actionsHtml = '';
+    
     if (canEdit) {
-      actionsHtml += `<button class="btn btn-sm btn-primary me-1" onclick="editAppointment(${cita.id_cita})">Editar</button>`;
+      actionsHtml += `
+        <button class="btn btn-sm me-1" style="background-color: #44C1F2; border-color: #44C1F2; color: white;" onclick="editAppointment(${cita.id_cita})" title="Editar Cita">
+          <i class="fas fa-edit"></i>
+        </button>
+      `;
     }
+    
     if (canCancel) {
-      actionsHtml += `<button class="btn btn-sm btn-danger" onclick="cancelAppointment(${cita.id_cita})">Cancelar</button>`;
-    }
-    if (!canEdit && !canCancel) {
-      actionsHtml = '<span class="text-muted">Sin acciones</span>';
+      actionsHtml += `
+        <button class="btn btn-sm" style="background-color: #dc3545; border-color: #dc3545; color: white;" onclick="cancelAppointment(${cita.id_cita})" title="Cancelar Cita">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
     }
     
     rows += `
@@ -508,79 +641,18 @@ function canEditAppointment(fechaCita, estadoId) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  return estadoId == 1 && citaDate >= today;
+  // Permitir editar solo citas con estado "Pendiente" (3)
+  return estadoId == 3;
 }
 
-// Verificar si se puede cancelar una cita
 function canCancelAppointment(estadoId) {
   return estadoId == 1 || estadoId == 3;
 }
 
-// Editar cita
+// Editar cita - ACTUALIZADO para redirigir a ActualizarCita.html
 function editAppointment(citaId) {
-  const url = determineRouterUrl('showCita');
-  
-  $.ajax({
-    url: url,
-    method: 'GET',
-    data: { id: citaId },
-    dataType: 'json',
-    success: function(response) {
-      if (response.status === 'success') {
-        const cita = response.data;
-        
-        // Guardar en sessionStorage y navegar
-        sessionStorage.setItem('editingCita', JSON.stringify(cita));
-        window.location.href = 'RegistrarCita.html';
-      } else {
-        alert('Error al cargar los datos de la cita');
-      }
-    },
-    error: function(xhr, status, error) {
-      console.error('Error al cargar cita:', error);
-      alert('Error de conexión al cargar la cita');
-    }
-  });
-}
-
-// Verificar si hay una cita para editar al cargar la página
-function checkForEditingCita() {
-  const editingCita = sessionStorage.getItem('editingCita');
-  if (editingCita && document.querySelector('.btn-register')) {
-    try {
-      const cita = JSON.parse(editingCita);
-      sessionStorage.removeItem('editingCita');
-      fillEditForm(cita);
-    } catch (e) {
-      console.error('Error al parsear cita para editar:', e);
-      sessionStorage.removeItem('editingCita');
-    }
-  }
-}
-
-// Llenar formulario para edición
-function fillEditForm(cita) {
-  console.log('Llenando formulario para editar:', cita);
-  editingCitaId = cita.id_cita;
-  
-  // Esperar un poco para que los selects estén poblados
-  setTimeout(() => {
-    $('#servicio').val(cita.id_servicio);
-    $('#especialidad').val(cita.id_especialidad);
-    $('#hora').val(cita.hora);
-    $('#fecha').val(cita.fecha);
-    
-    // Cambiar el texto del botón
-    $('.btn-register').text('Actualizar Cita');
-    $('h1').text('Editar Cita');
-  }, 1000);
-}
-
-// Cancelar edición
-function cancelEdit() {
-  editingCitaId = null;
-  $('.btn-register').text('Registrar Cita');
-  $('h1').text('Registrar Cita');
+  console.log('Redirigiendo a editar cita:', citaId);
+  window.location.href = `ActualizarCita.html?id=${citaId}`;
 }
 
 // Cancelar cita
@@ -662,11 +734,11 @@ function formatTime(timeString) {
 // Obtener clase CSS para el badge del estado
 function getStatusBadgeClass(estadoId) {
   switch (parseInt(estadoId)) {
-    case 1: return 'bg-primary';      // Programada
-    case 2: return 'bg-success';      // Completada  
-    case 3: return 'bg-warning';      // En proceso
-    case 4: return 'bg-danger';       // Cancelada
-    case 5: return 'bg-secondary';    // Reprogramada
+    case 1: return 'bg-success';       // Activa/Confirmada
+    case 2: return 'bg-info';          // Completada  
+    case 3: return 'bg-warning';       // Pendiente
+    case 4: return 'bg-danger';        // Cancelada
+    case 5: return 'bg-secondary';     // Reprogramada
     default: return 'bg-light text-dark';
   }
 }

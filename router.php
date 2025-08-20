@@ -10,10 +10,15 @@ require_once 'app/controllers/AuthController.php';
 require_once 'app/controllers/CitaController.php';
 require_once 'app/controllers/ExpedienteController.php';
 require_once 'app/controllers/MedicamentoController.php';
+require_once 'app/controllers/VacunaController.php';
 
 // Verificar sesión para rutas que la necesitan
-if (in_array($_GET['action'] ?? '', ['createCitaPatient', 'listMyCitas', 'showExpediente', 'updateExpediente']) && !isset($_SESSION['user']['id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Sesion no iniciada']);
+if (in_array($_GET['action'] ?? '', [
+    'createCitaPatient', 'listMyCitas', 'showExpediente', 'updateExpediente',
+    'listMisMedicamentos', 'showMedicamentoPaciente', 
+    'createVacunaPatient', 'listMyVaccines', 'showVacunaPaciente', 'updateVacuna', 'deleteVacuna'
+]) && !isset($_SESSION['user']['id'])) {
+    echo json_encode(['status' => 'error', 'message' => 'Sesión no iniciada']);
     exit;
 }
 
@@ -23,6 +28,7 @@ $auth = new AuthController();
 $cita = new CitaController();
 $expediente = new ExpedienteController();
 $medicamento = new MedicamentoController();
+$vacuna = new VacunaController();
 
 switch ($action) {
     // Rutas de autenticación
@@ -100,7 +106,7 @@ switch ($action) {
         $expediente->list();
         break;
 
-    // Rutas de expediente
+    // Rutas de medicamentos
     case 'createMedicamento':
         $medicamento->create();
         break;
@@ -160,6 +166,47 @@ switch ($action) {
         break;
     case 'getCatalogoMedicamentos':
         $medicamento->getCatalogoMedicamentos();
+        break;
+    
+    // Rutas de vacunas
+    case 'createVacuna':
+        $vacuna->create();
+        break;
+    case 'createVacunaPatient':
+        $vacuna->createForPatient();
+        break;
+    case 'listVacunas':
+        $vacuna->list();
+        break;
+    case 'listVacunasByUser':
+        $vacuna->listByUser();
+        break;
+    case 'listMyVaccines':
+        $vacuna->listMyVaccines();
+        break;
+    case 'showVacuna':
+        $vacuna->show();
+        break;
+    case 'showVacunaPaciente':
+        $vacuna->showVacunaPaciente();
+        break;
+    case 'updateVacuna':
+        $vacuna->update();
+        break;
+    case 'deleteVacuna':
+        $vacuna->delete();
+        break;
+    case 'getVacunasByDate':
+        $vacuna->getByDate();
+        break;
+    case 'getAvailableVaccines':
+        $vacuna->getAvailableVaccines();
+        break;
+    case 'searchPatientVacuna':
+        $vacuna->searchPatient();
+        break;
+    case 'getVacunasCatalogo':
+        $vacuna->getVacunasCatalogo();
         break;
     
     default:
