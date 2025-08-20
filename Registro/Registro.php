@@ -4,36 +4,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registrar Usuario</title>
+  <title>Registrarse</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css" />
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container-fluid">
-      <a href="inicioAdmin.html" class="navbar-brand d-flex align-items-center">
-        <div class="logo"></div>
-      </a>
-      <div class="navbar-nav me-auto">
-        <a class="nav-link" href="MedicoEspecialidad.php">Médico-Especialidad</a>
-        <a class="nav-link" href="Usuarios.php">Usuarios</a>
-        <a class="nav-link" href="RegistrarRol.html">Roles</a>
-        <a class="nav-link" href="RegistrarCita.html">Citas</a>
-        <a class="nav-link" href="RegistrarMedicamentos.html">Medicamentos</a>
-        <a class="nav-link" href="RegistrarVacunas.html">Vacunas</a>
-      </div>
-      <div class="d-flex align-items-center">
-        <a href="../router.php?action=logout" class="text-black me-3 text-decoration-none" 
-                    onclick="return confirm('Esta seguro que desea cerrar sesion?')">Cerrar sesion</a>
-      </div>
-    </div>
-  </nav>
+  <a href="Login.php" class="back-link">&lt; Regresar</a>
 
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-10">
-        <h1 class="text-center mb-5">Registrar Usuario</h1>
+        <h1>Registrarse</h1>
 
         <form id="form-registro">
           <div class="row mb-4">
@@ -77,25 +59,40 @@
             </div>
 
             <div class="col-md-4 mb-3">
-              <label for="rol" class="form-label fw-bold">Rol</label>
-              <select id="rol" name="rol" class="form-select">
+              <label for="genero" class="form-label fw-bold">Género</label>
+              <select id="genero" name="genero" class="form-select">
                 <option value="">-- Selecciona --</option>
-                <option value="admin">Administrador</option>
-                <option value="user">Usuario</option>
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
+                <option value="otro">Otro</option>
               </select>
               
-              <label for="estado" class="form-label fw-bold mt-3">Estado</label>
-              <select id="estado" name="estado" class="form-select">
+              <label for="estado-civil" class="form-label fw-bold mt-3">Estado Civil</label>
+              <select id="estado-civil" name="estado_civil" class="form-select">
                 <option value="">-- Selecciona --</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
+                <option value="soltero">Soltero(a)</option>
+                <option value="casado">Casado(a)</option>
+                <option value="viudo">Viudo(a)</option>
+                <option value="divorciado">Divorciado(a)</option>
               </select>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+              <label for="password" class="form-label fw-bold">Contraseña</label>
+              <input type="password" id="password" name="password" class="form-control" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="confirm-password" class="form-label fw-bold">Verificar Contraseña</label>
+              <input type="password" id="confirm-password" name="confirm_password" class="form-control" />
             </div>
           </div>
 
           <div class="row">
             <div class="col-12 text-center">
-              <button type="submit" class="btn btn-register">Registrar Usuario</button>
+              <button type="submit" class="btn btn-register">Registrarse</button>
             </div>
           </div>
         </form>
@@ -105,7 +102,6 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="../js/scripts.js" defer></script>
-
-  <script src="../js/admin-usuarios-form.js"></script>
 </body>
+
 </html>

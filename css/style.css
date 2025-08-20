@@ -49,7 +49,7 @@ body {
   background-color: #44C1F2;
   border: none;
   border-radius: 25px;
-  padding: 12px 200px;
+  padding: 12px 150px;
   color: white;
   font-weight: 500;
   font-size: 20px;
@@ -68,6 +68,48 @@ body {
 .btn-register:hover,
 .btn-nuevo:hover {
   background-color: #4B94F2;
+  color: white;
+}
+
+/* Estilo para botón cancelar */
+.btn-cancel,
+.btn-secondary {
+  background-color: #6c757d;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 40px;
+  color: white;
+  font-weight: 500;
+  font-size: 20px;
+  margin-left: 30px;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel:hover,
+.btn-secondary:hover {
+  background-color: #5a6268;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+}
+
+/* Para botones específicos por ID */
+#btnCancelar,
+#cancelEdit {
+  background-color: #6c757d;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 40px;
+  color: white;
+  font-weight: 500;
+  font-size: 20px;
+  margin-left: 30px;
+  transition: all 0.3s ease;
+}
+
+#btnCancelar:hover,
+#cancelEdit:hover {
+  background-color: #5a6268;
   color: white;
 }
 
@@ -180,7 +222,7 @@ h1 {
   background-color: #4B94F2;
   border: none;
   border-radius: 25px;
-  padding: 12px 200px;
+  padding: 12px 150px;
   color: white;
   font-weight: 500;
   font-size: 20px;
@@ -263,4 +305,77 @@ h1 {
   font-size: 14px;
   margin-top: 5px;
   font-weight: 500;
+}
+
+.login-logo {
+  width: 150px;
+  height: 150px;
+  background-image: url('../img/logo.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: block;
+  margin: 0 auto;
+}
+
+.btn-login {
+  background-color: #44C1F2;
+  border: none;
+  border-radius: 25px;
+  padding: 12px 50px;
+  color: white;
+  font-weight: 500;
+  font-size: 16px;
+  display: block;
+  margin: 0 auto;
+}
+
+.btn-login:hover {
+  background-color: #4B94F2;
+  color: white;
+}
+
+.btn-action {
+  border: none;
+  border-radius: 25px;
+  padding: 8px 20px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-editar {
+  background-color: #44C1F2;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-editar:hover {
+  background-color: #4B94F2;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-deshabilitar {
+  background-color: #d9534f;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-deshabilitar:hover {
+  background-color: #c9302c;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-ver {
+  background-color: #44C1F2;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-ver:hover {
+  background-color: #4B94F2;
+  text-decoration: none;
+  color: white;
 }
