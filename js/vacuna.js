@@ -139,3 +139,159 @@ function formatearFecha(fecha) {
         day: 'numeric'
     });
 }
+
+// Vacunas - Módulo Médico
+document.addEventListener("DOMContentLoaded", () => {
+  const tablaGlobal = document.getElementById("tablaVacunasGlobal");
+  const buscadorGlobal = document.getElementById("buscarVacunaGlobal");
+
+  const tablaPaciente = document.getElementById("tablaVacunasPaciente");
+  const buscadorPaciente = document.getElementById("buscarVacunaPaciente");
+  const formRegistro = document.getElementById("form-registro");
+  const cedulaInput = document.getElementById("cedula");
+  const nombreInput = document.getElementById("nombre");
+  const fechaInput = document.getElementById("fecha");
+
+  if (fechaInput) fechaInput.value = new Date().toISOString().split("T")[0];
+
+  // ----- LISTADO GLOBAL DE VACUNAS -----
+  if (tablaGlobal) {
+    fetch(`../../controllers/VacunasController.php?action=listarVacunas`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") renderVacunas(data.data, tablaGlobal);
+        else tablaGlobal.innerHTML = `<tr><td colspan="5" class="text-center">No se encontraron vacunas</td></tr>`;
+      });
+
+    if (buscadorGlobal) {
+      buscadorGlobal.addEventListener("keyup", () => {
+        const termino = buscadorGlobal.value.toLowerCase();
+        fetch(`../../controllers/VacunasController.php?action=listarVacunas`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === "success") {
+              const filtradas = data.data.filter(v =>
+                v.nombre.toLowerCase().includes(termino) ||
+                v.enfermedad.toLowerCase().includes(termino) ||
+                (v.grupo && v.grupo.toLowerCase().includes(termino)) ||
+                v.esquema_vacunacion.toLowerCase().includes(termino) ||
+                v.via_administracion.toLowerCase().includes(termino)
+              );
+              renderVacunas(filtradas, tablaGlobal);
+            }
+          });
+      });
+    }
+  }
+
+  // ----- REGISTRAR VACUNACIÓN -----
+  if (formRegistro) {
+
+    if (cedulaInput && nombreInput) {
+      cedulaInput.addEventListener("blur", () => {
+        const cedula = cedulaInput.value.trim();
+        if (!cedula) return;
+
+        fetch(`../../controllers/VacunasController.php?action=buscarPaciente&cedula=${cedula}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === "success") {
+              nombreInput.value = data.data.nombre_completo;
+              actualizarTablaPaciente(data.data.id_usuario);
+            } else {
+              nombreInput.value = "";
+              tablaPaciente.innerHTML = `<tr><td colspan="5" class="text-center">Paciente no encontrado</td></tr>`;
+            }
+          });
+      });
+    }
+
+    formRegistro.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formData = new FormData(formRegistro);
+
+      fetch('../../controllers/VacunasController.php?action=registrarVacuna', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          alert("Vacunación registrada correctamente.");
+          formRegistro.reset();
+          nombreInput.value = "";
+          const cedula = cedulaInput.value.trim();
+          if (cedula) {
+            fetch(`../../controllers/VacunasController.php?action=buscarPaciente&cedula=${cedula}`)
+              .then(res => res.json())
+              .then(data => {
+                if (data.status === "success") actualizarTablaPaciente(data.data.id_usuario);
+              });
+          }
+        } else alert("Error: " + data.message);
+      });
+    });
+
+    // Buscador vacunas del paciente
+    if (buscadorPaciente) {
+      buscadorPaciente.addEventListener("keyup", () => {
+        const termino = buscadorPaciente.value.toLowerCase();
+        const cedula = cedulaInput.value.trim();
+        if (!cedula) return;
+        fetch(`../../controllers/VacunasController.php?action=buscarPaciente&cedula=${cedula}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === "success") {
+              const id_usuario = data.data.id_usuario;
+              fetch(`../../controllers/VacunasController.php?action=listarVacunasPaciente&id_usuario=${id_usuario}`)
+                .then(res => res.json())
+                .then(data => {
+                  if (data.status === "success") {
+                    const filtradas = data.data.filter(v =>
+                      v.nombre.toLowerCase().includes(termino) ||
+                      v.enfermedad.toLowerCase().includes(termino) ||
+                      (v.grupo && v.grupo.toLowerCase().includes(termino)) ||
+                      v.esquema_vacunacion.toLowerCase().includes(termino) ||
+                      v.via_administracion.toLowerCase().includes(termino)
+                    );
+                    renderVacunas(filtradas, tablaPaciente);
+                  }
+                });
+            }
+          });
+      });
+    }
+
+    function actualizarTablaPaciente(id_usuario) {
+      if (!id_usuario || !tablaPaciente) return;
+      fetch(`../../controllers/VacunasController.php?action=listarVacunasPaciente&id_usuario=${id_usuario}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success") renderVacunas(data.data, tablaPaciente);
+          else tablaPaciente.innerHTML = `<tr><td colspan="5" class="text-center">No se encontraron vacunas</td></tr>`;
+        });
+    }
+  }
+});
+
+// Función para renderizar la tabla de vacunas
+function renderVacunas(vacunas, tabla) {
+  tabla.innerHTML = "";
+  if (vacunas.length === 0) {
+    tabla.innerHTML = `<tr><td colspan="5" class="text-center">No hay vacunas registradas</td></tr>`;
+    return;
+  }
+
+  vacunas.forEach(vacuna => {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${vacuna.nombre}</td>
+      <td>${vacuna.enfermedad}</td>
+      <td>${vacuna.grupo ?? 'N/A'}</td>
+      <td>${vacuna.esquema_vacunacion}</td>
+      <td>${vacuna.via_administracion}</td>
+    `;
+    tabla.appendChild(fila);
+  });
+}
+

@@ -196,3 +196,112 @@ function debugLog(message, data = '') {
         console.log('[Expediente Debug]', message, data);
     }
 }
+
+                                       // Expediente medico 
+// Expediente médico
+document.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    const cedula = params.get("cedula");
+
+    const mostrarError = (msg) => alert("❌ " + msg);
+    const mostrarExito = (msg) => alert("✅ " + msg);
+
+    if (!cedula) {
+        mostrarError("Cédula no proporcionada");
+        return;
+    }
+
+    // Función para llenar campos del formulario
+    function llenarCampos(paciente) {
+        const campos = {
+            idUsuario: paciente.id_usuario,
+            cedula: paciente.cedula,
+            correo: paciente.correo,
+            telefono: paciente.telefono,
+            estadoCivil: paciente.estado_civil,
+            fechaNacimiento: paciente.fecha_nacimiento,
+            genero: paciente.genero,
+            direccion: paciente.direccion,
+            peso: paciente.peso,
+            altura: paciente.altura,
+            tipoSangre: paciente.tipo_sangre,
+            enfermedades: paciente.enfermedades,
+            alergias: paciente.alergias,
+            cirugias: paciente.cirugias
+        };
+
+        for (let id in campos) {
+            const el = document.getElementById(id);
+            if (el) el.value = campos[id] ?? "";
+        }
+
+        const nombreEl = document.getElementById("nombreCompleto");
+        if (nombreEl) {
+            const formActualizar = document.getElementById("actualizarForm");
+            nombreEl.textContent = formActualizar
+                ? `Actualizar expediente de: ${paciente.nombre} ${paciente.apellidos}`
+                : `Expediente de: ${paciente.nombre} ${paciente.apellidos}`;
+        }
+
+        const btnActualizar = document.getElementById("btnActualizar");
+        if (btnActualizar) btnActualizar.href = `ActualizarExpediente.html?cedula=${cedula}`;
+    }
+
+    // Cargar datos del paciente
+    fetch(`../controllers/ExpedienteController.php?action=getByCedula&cedula=${cedula}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                llenarCampos(data.data);
+            } else {
+                mostrarError(data.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            mostrarError("Error de conexión al cargar expediente");
+        });
+
+    // Manejar actualización si estamos en la página de actualizar
+    const actualizarForm = document.getElementById("actualizarForm");
+    if (actualizarForm) {
+        actualizarForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            // Validar correo antes de enviar
+            const correo = actualizarForm.querySelector('[name="correo"]');
+            if (!correo || !correo.value.trim()) {
+                mostrarError("El correo electrónico es requerido");
+                correo?.focus();
+                return;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(correo.value.trim())) {
+                mostrarError("Por favor ingrese un correo electrónico válido");
+                correo.focus();
+                return;
+            }
+
+            const formData = new FormData(actualizarForm);
+
+            fetch(`../controllers/ExpedienteController.php?action=update`, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    mostrarExito("Expediente actualizado correctamente");
+                    window.location.href = `Expediente.html?cedula=${cedula}`;
+                } else {
+                    mostrarError("Error al actualizar: " + data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                mostrarError("Error de conexión al actualizar expediente");
+            });
+        });
+    }
+});
+
