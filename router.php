@@ -1,16 +1,13 @@
 <?php
-
 error_reporting(E_ERROR | E_PARSE);
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 require_once 'app/controllers/AuthController.php';
 require_once 'app/controllers/CitaController.php';
 require_once 'app/controllers/ExpedienteController.php';
 require_once 'app/controllers/MedicamentoController.php';
 require_once 'app/controllers/VacunaController.php';
+<<<<<<< Updated upstream
 
 // Verificar sesión para rutas que la necesitan
 if (in_array($_GET['action'] ?? '', [
@@ -21,91 +18,45 @@ if (in_array($_GET['action'] ?? '', [
     echo json_encode(['status' => 'error', 'message' => 'Sesión no iniciada']);
     exit;
 }
+=======
+require_once 'app/controllers/UsuarioController.php';
+require_once 'app/controllers/RolController.php';
+>>>>>>> Stashed changes
 
 $action = $_GET['action'] ?? '';
 
 $auth = new AuthController();
+$usuario = new UsuarioController();
+$rol = new RolController();
 $cita = new CitaController();
 $expediente = new ExpedienteController();
 $medicamento = new MedicamentoController();
 $vacuna = new VacunaController();
+<<<<<<< Updated upstream
+=======
+
+// Rutas que requieren sesión (ejemplo simple: todo excepto login)
+$requiresSession = [
+    'getUsuarios','getUsuario','createUsuario','updateUsuario','enableUsuario','disableUsuario',
+    'getRoles','getRol','createRol','updateRol','enableRol','disableRol',
+    // ... agregue aquí otras rutas protegidas si aplica
+];
+
+if (in_array($action, $requiresSession)) {
+    if (!isset($_SESSION['user'])) {
+        header('Content-Type: application/json');
+        echo json_encode(['status'=>'error','message'=>'No autenticado']);
+        exit;
+    }
+}
+>>>>>>> Stashed changes
 
 switch ($action) {
-    // Rutas de autenticación
-    case 'login':
-        $auth->login();
-        break;
-    case 'register':
-        $auth->register();
-        break;
-    case 'logout':
-        $auth->logout();
-        break;
-    
-    // Rutas de citas
-    case 'createCita':
-        $cita->create();
-        break;
-    case 'createCitaPatient':
-        $cita->createForPatient();
-        break;
-    case 'listCitas':
-        $cita->list();
-        break;
-    case 'listCitasByUser':
-        $cita->listByUser();
-        break;
-    case 'listMyCitas':
-        $cita->listMyAppointments();
-        break;
-    case 'showCita':
-        $cita->show();
-        break;
-    case 'updateCita':
-        $cita->update();
-        break;
-    case 'updateCitaStatus':
-        $cita->updateStatus();
-        break;
-    case 'deleteCita':
-        $cita->delete();
-        break;
-    case 'checkAvailability':
-        $cita->checkAvailability();
-        break;
-    case 'getCitasByDate':
-        $cita->getByDate();
-        break;
-    case 'getAvailableDoctors':
-        $cita->getAvailableDoctors();
-        break;
-    case 'searchPatient':
-        $cita->searchPatient();
-        break;
-    case 'getSpecialties':
-        $cita->getSpecialties();
-        break;
-    case 'getServices':
-        $cita->getServices();
-        break;
-    
-    // Rutas de expediente
-    case 'showExpediente':
-        $expediente->show();
-        break;
-    case 'updateExpediente':
-        $expediente->update();
-        break;
-    case 'showExpedienteByUser':
-        $expediente->showByUser();
-        break;
-    case 'searchPatientByCedula':
-        $expediente->searchPatient();
-        break;
-    case 'listExpedientes':
-        $expediente->list();
-        break;
+    // Autenticación
+    case 'login': $auth->login(); break;
+    case 'logout': $auth->logout(); break;
 
+<<<<<<< Updated upstream
     // Rutas de medicamentos
     case 'createMedicamento':
         $medicamento->create();
@@ -211,5 +162,27 @@ switch ($action) {
     
     default:
         echo json_encode(['status' => 'error', 'message' => 'Ruta no encontrada']);
+=======
+    // Usuarios (Administración)
+    case 'getUsuarios': $usuario->getAll(); break;
+    case 'getUsuario': $usuario->getOne(); break;
+    case 'createUsuario': $usuario->create(); break;
+    case 'updateUsuario': $usuario->update(); break;
+    case 'enableUsuario': $usuario->enable(); break;
+    case 'disableUsuario': $usuario->disable(); break;
+
+    // Roles (Administración)
+    case 'getRoles': $rol->getAll(); break;
+    case 'getRol': $rol->getOne(); break;
+    case 'createRol': $rol->create(); break;
+    case 'updateRol': $rol->update(); break;
+    case 'enableRol': $rol->enable(); break;
+    case 'disableRol': $rol->disable(); break;
+
+    // Mantener las rutas existentes del resto de módulos
+    default:
+        header('Content-Type: application/json');
+        echo json_encode(['status'=>'error','message'=>'Ruta no encontrada']);
+>>>>>>> Stashed changes
 }
 ?>
