@@ -68,15 +68,6 @@ if (isset($_SESSION['user']) && !isset($_GET['logout'])) {
           <p class="text-muted mb-2">No tienes cuenta?</p>
           <a href="Registro.php" class="back-link">Registrarse aqui</a>
         </div>
-
-        <div class="mt-4 p-3 border rounded" style="background-color: #f8f9fa;">
-          <h6>Credenciales de prueba:</h6>
-          <small class="text-muted">
-            <strong>Admin:</strong> 123456789 / admin123<br>
-            <strong>Medico:</strong> 987654321 / medico123<br>
-            <strong>Paciente:</strong> 456789123 / paciente123
-          </small>
-        </div>
       </div>
     </div>
   </div>
