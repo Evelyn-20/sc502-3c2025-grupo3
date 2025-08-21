@@ -4,10 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registrar Cita</title>
+  <title>Actualizar Cita</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css" />
-  <script src="../js/scripts.js" defer></script>
 </head>
 
 <body>
@@ -17,13 +16,12 @@
         <div class="logo"></div>
       </a>
       <div class="navbar-nav me-auto">
-        <a class="nav-link" href="MedicoEspecialidad.php">Médico-Especialidad</a>
+        <a class="nav-link" href="Asociacion.php">Médico-Especialidad</a>
         <a class="nav-link" href="Usuarios.php">Usuarios</a>
-        <a class="nav-link" href="RegistrarRol.html">Roles</a>
-        <a class="nav-link" href="RegistrarCita.html">Citas</a>
-        <a class="nav-link" href="RegistrarMedicamentos.html">Medicamentos</a>
-        <a class="nav-link" href="RegistrarVacunas.html">Vacunas</a>
-        
+        <a class="nav-link" href="Roles.php">Roles</a>
+        <a class="nav-link" href="Citas.php">Citas</a>
+        <a class="nav-link" href="Medicamentos.php">Medicamentos</a>
+        <a class="nav-link" href="Vacunas.php">Vacunas</a>
       </div>
       <div class="d-flex align-items-center">
         <a href="../router.php?action=logout" class="text-black me-3 text-decoration-none" 
@@ -31,6 +29,14 @@
       </div>
     </div>
   </nav>
+
+  <!-- Overlay de carga -->
+  <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+    <div class="text-center text-white">
+      <div class="spinner-border" role="status"></div>
+      <div class="mt-2">Cargando datos de la cita...</div>
+    </div>
+  </div>
 
   <div class="container mt-5">
     <div class="row justify-content-center">
@@ -44,38 +50,36 @@
               <input type="text" id="cedula-paciente" name="cedula_paciente" class="form-control" />
 
               <label for="nombre-paciente" class="form-label fw-bold mt-3">Nombre Completo</label>
-              <input type="text" id="nombre-paciente" name="nombre_paciente" class="form-control" />
+              <input type="text" id="nombre-paciente" name="nombre_paciente" class="form-control" readonly />
             </div>
 
             <div class="col-md-4 mb-3">
               <label for="servicio" class="form-label fw-bold">Servicio</label>
               <select id="servicio" name="servicio" class="form-select">
-                <option value="">-- Selecciona --</option>
-                <option value="consulta">Consulta</option>
-                <option value="seguimiento">Seguimiento</option>
-                <option value="urgencias">Urgencias</option>
+                <option value="">Seleccionar...</option>
               </select>
 
               <label for="especialidad" class="form-label fw-bold mt-3">Especialidad</label>
               <select id="especialidad" name="especialidad" class="form-select">
-                <option value="">-- Selecciona --</option>
-                <option value="medicina-general">Medicina General</option>
-                <option value="pediatria">Pediatría</option>
-                <option value="ginecologia">Ginecología</option>
+                <option value="">Seleccionar...</option>
               </select>
 
               <label for="hora" class="form-label fw-bold mt-3">Hora</label>
               <select id="hora" name="hora" class="form-select">
-                <option value="">-- Selecciona --</option>
+                <option value="">Seleccionar...</option>
                 <option value="08:00">08:00</option>
                 <option value="09:00">09:00</option>
                 <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
               </select>
             </div>
 
             <div class="col-md-4 mb-3">
               <label for="fecha" class="form-label fw-bold">Fecha</label>
-              <input type="text" id="fecha" name="fecha" class="form-control date-input" readonly />
+              <input type="date" id="fecha" name="fecha" class="form-control date-input" />
 
               <label class="form-label fw-bold mt-3">Calendario</label>
               <div id="calendario-simple"></div>
@@ -86,6 +90,7 @@
       <div class="row">
         <div class="col-12 text-center">
           <button type="submit" class="btn btn-register">Actualizar Cita</button>
+          <a href="Citas.php" class="btn btn-secondary ms-2">Cancelar</a>
         </div>
       </div>
       </form>
@@ -94,7 +99,9 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-  <script src="../js/scripts.js" defer></script>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <script src="../js/admin-citas.js"></script>
+  <script src="../js/calendario.js"></script>
 </body>
 
 </html>

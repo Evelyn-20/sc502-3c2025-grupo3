@@ -84,5 +84,37 @@ class ExpedienteController {
 
         echo json_encode(['status' => 'success', 'data' => $expedientes]);
     }
+
+    public function updateExpedienteAdmin() {
+        $expediente = new Expediente();
+        
+        $id_usuario = $_POST['id_usuario'] ?? 0;
+        
+        // Información personal
+        $correo = $_POST['correo'] ?? '';
+        $telefono = $_POST['telefono'] ?? '';
+        $estado_civil = $_POST['estado_civil'] ?? '';
+        $fecha_nacimiento = $_POST['fecha_nacimiento'] ?? '';
+        $genero = $_POST['genero'] ?? '';
+        $direccion = $_POST['direccion'] ?? '';
+
+        // Información médica
+        $peso = $_POST['peso'] ?? '';
+        $altura = $_POST['altura'] ?? '';
+        $tipo_sangre = $_POST['tipo_sangre'] ?? '';
+        $enfermedades = $_POST['enfermedades'] ?? '';
+        $alergias = $_POST['alergias'] ?? '';
+        $cirugias = $_POST['cirugias'] ?? '';
+
+        if ($id_usuario > 0) {
+            if ($expediente->actualizarExpedienteAdmin($id_usuario, $correo, $telefono, $estado_civil, $fecha_nacimiento, $genero, $direccion, $peso, $altura, $tipo_sangre, $enfermedades, $alergias, $cirugias)) {
+                echo json_encode(['status' => 'success', 'message' => 'Expediente actualizado exitosamente']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'No se pudo actualizar el expediente']);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'ID de usuario requerido']);
+        }
+    }
 }
 ?>

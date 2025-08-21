@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-08-2025 a las 07:41:30
+-- Tiempo de generación: 21-08-2025 a las 19:04:41
 -- Versión del servidor: 8.0.41
 -- Versión de PHP: 8.2.12
 
@@ -43,62 +43,64 @@ CREATE TABLE `cita` (
 --
 
 INSERT INTO `cita` (`id_cita`, `fecha`, `hora`, `id_usuario`, `id_medico`, `id_servicio`, `id_especialidad`, `id_estado`) VALUES
-(1, '2024-01-15', '9:00 am', 23, 3, 1, 1, 5),
-(2, '2024-03-10', '2:30 pm', 23, 7, 6, 3, 5),
-(3, '2024-06-20', '10:15 am', 23, 15, 5, 2, 5),
-(4, '2024-02-18', '8:45 am', 24, 8, 7, 4, 5),
-(5, '2024-05-22', '11:20 am', 24, 12, 5, 2, 5),
-(6, '2024-08-14', '4:00 pm', 24, 4, 1, 1, 4),
-(7, '2024-03-25', '1:30 pm', 25, 5, 11, 8, 5),
-(8, '2024-07-10', '9:45 am', 25, 14, 5, 2, 5),
-(9, '2024-11-08', '3:15 pm', 25, 18, 9, 6, 3),
-(10, '2024-01-30', '10:30 am', 26, 9, 1, 1, 5),
-(11, '2024-04-15', '2:00 pm', 26, 16, 6, 3, 5),
-(12, '2024-09-20', '8:30 am', 26, 22, 13, 10, 5),
-(13, '2024-02-12', '11:45 am', 27, 6, 8, 5, 5),
-(14, '2024-06-18', '4:30 pm', 27, 13, 9, 6, 5),
-(15, '2024-10-25', '9:15 am', 27, 19, 13, 10, 4),
-(16, '2024-03-08', '12:00 pm', 28, 10, 4, 1, 5),
-(17, '2024-07-22', '3:45 pm', 28, 17, 9, 6, 5),
-(18, '2024-12-05', '10:00 am', 28, 11, 8, 5, 5),
-(19, '2024-04-10', '8:15 am', 29, 20, 12, 9, 5),
-(20, '2024-08-28', '1:15 pm', 29, 3, 1, 1, 5),
-(21, '2024-11-12', '2:45 pm', 29, 15, 11, 8, 4),
-(22, '2024-05-14', '9:30 am', 30, 21, 10, 7, 5),
-(23, '2024-09-05', '11:00 am', 30, 8, 7, 4, 5),
-(24, '2024-12-18', '4:15 pm', 30, 16, 6, 3, 5),
-(25, '2025-01-20', '8:00 am', 31, 12, 5, 2, 3),
-(26, '2025-03-15', '10:45 am', 31, 7, 6, 3, 3),
-(27, '2025-05-22', '2:30 pm', 31, 19, 13, 10, 3),
-(28, '2025-02-10', '9:15 am', 32, 5, 11, 8, 3),
-(29, '2025-04-18', '1:00 pm', 32, 14, 5, 2, 3),
-(30, '2025-07-25', '11:30 am', 32, 22, 13, 10, 3),
-(31, '2025-01-28', '3:00 pm', 33, 18, 9, 6, 3),
-(32, '2025-03-30', '8:30 am', 33, 6, 8, 5, 3),
-(33, '2025-06-12', '4:45 pm', 33, 13, 9, 6, 3),
-(34, '2025-02-25', '10:00 am', 34, 17, 9, 6, 3),
-(35, '2025-04-08', '12:15 pm', 34, 10, 4, 1, 3),
-(36, '2025-08-14', '2:00 pm', 34, 20, 12, 9, 3),
-(37, '2025-03-12', '9:45 am', 35, 11, 8, 5, 3),
-(38, '2025-05-20', '11:15 am', 35, 21, 10, 7, 3),
-(39, '2025-09-18', '3:30 pm', 35, 4, 1, 1, 3),
-(40, '2025-01-15', '1:45 pm', 36, 9, 1, 1, 3),
-(41, '2025-04-22', '8:00 am', 36, 15, 11, 8, 3),
-(42, '2025-07-30', '4:00 pm', 36, 16, 6, 3, 3),
-(43, '2024-01-08', '10:00 am', 24, 3, 1, 1, 5),
-(44, '2024-02-22', '3:30 pm', 25, 8, 7, 4, 5),
-(45, '2024-03-18', '11:15 am', 26, 12, 5, 2, 5),
-(46, '2024-04-25', '4:30 pm', 27, 17, 9, 6, 5),
-(47, '2024-05-30', '11:45 am', 28, 21, 10, 7, 5),
-(48, '2024-06-14', '9:30 am', 29, 6, 8, 5, 5),
-(49, '2024-07-08', '1:00 pm', 30, 13, 9, 6, 5),
-(50, '2025-08-15', '9:30 am', 23, 18, 9, 6, 3),
-(51, '2025-09-22', '11:00 am', 24, 5, 11, 8, 3),
-(52, '2025-10-18', '2:45 pm', 25, 20, 12, 9, 3),
-(53, '2025-11-25', '4:15 pm', 26, 22, 13, 10, 3),
-(54, '2025-12-12', '8:15 am', 27, 14, 5, 2, 3),
-(55, '2025-08-28', '15:00:00', 23, 21, 2, 10, 4),
-(56, '2025-08-27', '10:00:00', 23, 20, 12, 9, 1);
+(1, '2024-01-15', '09:00', 23, 3, 1, 1, 5),
+(2, '2024-03-10', '14:00', 23, 7, 6, 3, 5),
+(3, '2024-06-20', '10:00', 23, 15, 5, 2, 5),
+(4, '2024-02-18', '08:00', 24, 8, 7, 4, 5),
+(5, '2024-05-22', '11:00', 24, 12, 5, 2, 5),
+(6, '2024-08-14', '16:00 ', 24, 4, 1, 1, 4),
+(7, '2024-03-25', '10:00', 25, 5, 11, 8, 5),
+(8, '2024-07-10', '09:00', 25, 14, 5, 2, 5),
+(9, '2024-11-08', '15:00', 25, 18, 9, 6, 3),
+(10, '2024-01-30', '10:00', 26, 9, 1, 1, 5),
+(11, '2024-04-15', '14:00 ', 26, 16, 6, 3, 5),
+(12, '2024-09-20', '08:00', 26, 22, 13, 10, 5),
+(13, '2024-02-12', '11:00', 27, 6, 8, 5, 5),
+(14, '2024-06-18', '16:00', 27, 13, 9, 6, 5),
+(15, '2024-10-25', '09:00', 27, 19, 13, 10, 4),
+(16, '2024-03-08', '13:00', 28, 10, 4, 1, 5),
+(17, '2024-07-22', '15:00', 28, 17, 9, 6, 5),
+(18, '2024-12-05', '10:00', 28, 11, 8, 5, 5),
+(19, '2024-04-10', '08:00', 29, 20, 12, 9, 5),
+(20, '2024-08-28', '14:00', 29, 3, 1, 1, 5),
+(21, '2024-11-12', '09:00', 29, 15, 11, 8, 4),
+(22, '2024-05-14', '09:00', 30, 21, 10, 7, 5),
+(23, '2024-09-05', '11:00', 30, 8, 7, 4, 5),
+(24, '2024-12-18', '16:00', 30, 16, 6, 3, 5),
+(25, '2025-01-20', '08:00 ', 31, 12, 5, 2, 3),
+(26, '2025-03-15', '10:00', 31, 7, 6, 3, 3),
+(27, '2025-05-22', '14:00', 31, 19, 13, 10, 3),
+(28, '2025-02-10', '09:00', 32, 5, 11, 8, 3),
+(29, '2025-04-18', '16:00', 32, 14, 5, 2, 3),
+(30, '2025-07-25', '11:00', 32, 22, 13, 10, 3),
+(31, '2025-01-28', '15:00', 33, 18, 9, 6, 3),
+(32, '2025-03-30', '08:00', 33, 6, 8, 5, 3),
+(33, '2025-06-12', '16:00', 33, 13, 9, 6, 3),
+(34, '2025-02-25', '10:00', 34, 17, 9, 6, 3),
+(35, '2025-04-08', '08:00', 34, 10, 4, 1, 3),
+(36, '2025-08-14', '11:00', 34, 20, 12, 9, 3),
+(37, '2025-03-12', '09:00', 35, 11, 8, 5, 3),
+(38, '2025-05-20', '11:00', 35, 21, 10, 7, 3),
+(39, '2025-09-18', '15:00', 35, 4, 1, 1, 3),
+(40, '2025-01-15', '11:00', 36, 9, 1, 1, 3),
+(41, '2025-04-22', '08:00', 36, 15, 11, 8, 3),
+(42, '2025-07-30', '14:00', 36, 16, 6, 3, 3),
+(43, '2024-01-08', '10:00', 24, 3, 1, 1, 5),
+(44, '2024-02-22', '15:00', 25, 8, 7, 4, 5),
+(45, '2024-03-18', '11:00', 26, 12, 5, 2, 5),
+(46, '2024-04-25', '16:00', 27, 17, 9, 6, 5),
+(47, '2024-05-30', '11:00', 28, 21, 10, 7, 5),
+(48, '2024-06-14', '9:00', 29, 6, 8, 5, 5),
+(49, '2024-07-08', '11:00', 30, 13, 9, 6, 5),
+(50, '2025-08-31', '10:00', 23, 13, 9, 6, 3),
+(51, '2025-09-22', '11:00', 24, 5, 11, 8, 3),
+(52, '2025-10-18', '11:00', 25, 20, 12, 9, 4),
+(53, '2025-11-25', '16:00', 26, 22, 13, 10, 3),
+(54, '2025-12-12', '08:00', 27, 14, 5, 2, 3),
+(55, '2025-08-28', '15:00', 23, 21, 2, 10, 4),
+(56, '2025-08-27', '10:00', 23, 20, 12, 9, 3),
+(61, '2025-08-29', '10:00', 36, 5, 4, 1, 3),
+(62, '2025-08-29', '14:00', 36, 5, 4, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -417,22 +419,22 @@ CREATE TABLE `medicamento_paciente` (
 --
 
 INSERT INTO `medicamento_paciente` (`id_medicamento_paciente`, `nombre_completo`, `fecha_preescripcion`, `tiempo_tratamiento`, `indicaciones`, `id_estado`, `id_medicamento`, `id_paciente`) VALUES
-(1, 'José Ramírez Quesada', '2024-01-15', '5 días cada 8 horas', 'Tomar con alimentos para dolor de cabeza y fiebre', 1, 1, 23),
-(2, 'José Ramírez Quesada', '2024-03-10', '7 días cada 12 horas', 'Tratamiento antibiótico para infección respiratoria', 1, 5, 23),
+(1, 'José Ramírez Quesada', '2025-08-19', '5 días cada 8 horas', 'Tomar con alimentos para dolor de cabeza y fiebre', 1, 1, 23),
+(2, 'José Ramírez Quesada', '2024-03-10', '7 días cada 12 horas', 'Tratamiento antibiótico para infección respiratoria', 2, 5, 23),
 (3, 'Miguel Sandoval Torres', '2024-02-20', '3 días cada 6 horas', 'Para dolor muscular y inflamación', 2, 2, 24),
 (4, 'Miguel Sandoval Torres', '2024-05-15', 'Tratamiento crónico diario', 'Control de hipertensión arterial', 1, 12, 24),
 (5, 'Carlos Méndez Brenes', '2024-01-25', 'Según necesidad', 'Prevención cardiovascular, tomar con agua', 1, 3, 25),
 (6, 'Carlos Méndez Brenes', '2024-06-20', 'Tratamiento crónico', 'Control de diabetes tipo 2', 1, 15, 25),
-(7, 'Fernando Castro Elizondo', '2024-03-12', 'Aplicar 3 veces al día', 'Gel antiinflamatorio para lesión deportiva', 1, 4, 26),
-(8, 'Fernando Castro Elizondo', '2024-04-18', '10 días cada 8 horas', 'Antibiótico para infección bacteriana', 1, 7, 26),
+(7, 'Fernando Castro Elizondo', '2024-03-12', 'Aplicar 3 veces al día', 'Gel antiinflamatorio para lesión deportiva', 2, 4, 26),
+(8, 'Fernando Castro Elizondo', '2024-04-18', '10 días cada 8 horas', 'Antibiótico para infección bacteriana', 2, 7, 26),
 (9, 'María Córdoba Salas', '2024-02-14', '5 días cada 12 horas', 'Antibiótico para infección urinaria', 2, 6, 27),
-(10, 'María Córdoba Salas', '2024-07-22', 'Según prescripción médica', 'Corticoide para proceso inflamatorio', 1, 9, 27),
-(11, 'Ana Montero Villalobos', '2024-03-08', 'Aplicar 2 veces al día', 'Antibiótico tópico para infección cutánea', 1, 8, 28),
+(10, 'María Córdoba Salas', '2024-07-22', 'Según prescripción médica', 'Corticoide para proceso inflamatorio', 2, 9, 27),
+(11, 'Ana Montero Villalobos', '2025-08-17', 'Aplicar 2 veces al día', 'Antibiótico tópico para infección cutánea', 1, 8, 28),
 (12, 'Ana Montero Villalobos', '2024-08-15', 'Tratamiento crónico', 'Control de hipertensión arterial', 1, 13, 28),
 (13, 'Lucía Araya Fonseca', '2024-04-12', 'Según indicación médica', 'Corticoide inyectable para alergia severa', 2, 10, 29),
 (14, 'Lucía Araya Fonseca', '2024-09-10', 'Tratamiento crónico', 'Control de diabetes con dieta', 1, 16, 29),
 (15, 'Patricia Morales Jiménez', '2024-05-18', 'Aplicar según necesidad', 'Crema corticoide para dermatitis', 2, 11, 30),
-(16, 'Patricia Morales Jiménez', '2024-10-25', '5 días cada 24 horas', 'Antiviral para herpes labial', 1, 18, 30),
+(16, 'Patricia Morales Jiménez', '2024-10-25', '5 días cada 24 horas', 'Antiviral para herpes labial', 2, 18, 30),
 (17, 'Alex Rivera Campos', '2024-06-14', 'Una vez al día', 'Control de presión arterial', 1, 14, 31),
 (18, 'Alex Rivera Campos', '2024-11-08', 'Tratamiento crónico', 'Broncodilatador para asma', 1, 21, 31),
 (19, 'Sam Delgado Núñez', '2024-07-20', 'Según indicación endocrina', 'Insulina para diabetes tipo 1', 1, 17, 32),
@@ -505,7 +507,8 @@ CREATE TABLE `rol` (
 INSERT INTO `rol` (`id_rol`, `nombre`, `descripcion`, `id_estado`) VALUES
 (1, 'Administrador', 'Administrador del sistema con acceso completo a todas las funcionalidades.', 1),
 (2, 'Medico', 'Médico profesional.', 1),
-(3, 'Paciente', 'Usuario paciente.', 1);
+(3, 'Paciente', 'Usuario paciente.', 1),
+(4, 'Secretaria', 'Secretaria de la clínica', 2);
 
 -- --------------------------------------------------------
 
@@ -564,7 +567,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id_usuario`, `cedula_usuario`, `nombre`, `apellidos`, `correo`, `telefono`, `fecha_nacimiento`, `direccion`, `contrasena`, `id_genero`, `id_estado_civil`, `id_rol`, `id_estado`) VALUES
-(1, '123456789', 'Carlos', 'Rodríguez Pérez', 'carlos.admin@hospital.com', '22345678', NULL, 'San José, Costa Rica', 'admin123', NULL, NULL, 1, 1),
+(1, '123456789', 'Carlos', 'Rodríguez Pérez', 'carlos.admin@hospital.com', '22345678', NULL, 'San José, Costa Rica', '$2y$10$MKNYKOIMIARs4/MwAk3ENutXobycHjL6qavzQ8eYoDBIBI9hUHJ/m', NULL, NULL, 1, 1),
 (2, '987654321', 'María', 'González López', 'maria.admin@hospital.com', '22876543', NULL, 'Cartago, Costa Rica', 'admin456', NULL, NULL, 1, 1),
 (3, '456789123', 'Juan', 'Hernández Mora', 'juan.hernandez@hospital.com', '88234567', NULL, 'San José, Escazú', 'medico123', NULL, NULL, 2, 1),
 (4, '789123456', 'Ana', 'Vargas Solano', 'ana.vargas@hospital.com', '87654321', NULL, 'Cartago, Centro', 'medico456', NULL, NULL, 2, 1),
@@ -575,7 +578,7 @@ INSERT INTO `usuario` (`id_usuario`, `cedula_usuario`, `nombre`, `apellidos`, `c
 (9, '258147963', 'Dr. Mario', 'Castillo Vega', 'mario.castillo@hospital.com', '89258147', NULL, 'Alajuela, San Carlos', 'neumo123', NULL, NULL, 2, 1),
 (10, '741963852', 'Dra. Patricia', 'Moreno Sánchez', 'patricia.moreno@hospital.com', '88741963', NULL, 'Puntarenas, Esparza', 'neumo456', NULL, NULL, 2, 1),
 (11, '369258147', 'Dr. Carlos', 'Delgado Pérez', 'carlos.delgado@hospital.com', '87369258', NULL, 'Heredia, Flores', 'gastro123', NULL, NULL, 2, 1),
-(12, '852741963', 'Dra. Mónica', 'Arias Campos', 'monica.arias@hospital.com', '89852741', NULL, 'Guanacaste, Nicoya', 'gastro456', NULL, NULL, 2, 1),
+(12, '852741963', 'Dra. Mónica', 'Arias Campos', 'monica.arias@hospital.com', '89852741', NULL, 'Guanacaste, Nicoya', '$2y$10$7QF1l9U/XkRdMt734BFdrOk0xADp47CMAMiObe1msg391DOUgOqKq', NULL, NULL, 2, 1),
 (13, '147852963', 'Dr. Francisco', 'Solano Miranda', 'francisco.solano@hospital.com', '88147852', NULL, 'San José, Moravia', 'neuro123', NULL, NULL, 2, 1),
 (14, '963741852', 'Dra. Rebeca', 'Quesada Torres', 'rebeca.quesada@hospital.com', '87963741', NULL, 'Limón, Siquirres', '$2y$10$PZkujAod2Hp9D6uQJNWyYOvyvIv9NKnSr/96xPPp6/aM7GOyTW0ly', NULL, NULL, 2, 1),
 (15, '258963741', 'Dr. Gerardo', 'Brenes Elizondo', 'gerardo.brenes@hospital.com', '89258963', NULL, 'Cartago, Turrialba', 'reuma123', NULL, NULL, 2, 1),
@@ -597,9 +600,10 @@ INSERT INTO `usuario` (`id_usuario`, `cedula_usuario`, `nombre`, `apellidos`, `c
 (31, '181920212', 'Alex', 'Rivera Campos', 'alex.rivera@email.com', '89000111', '1993-06-14', 'San José, Tibás', 'paciente369', 3, 1, 3, 1),
 (32, '223242526', 'Sam', 'Delgado Núñez', 'sam.delgado@email.com', '88123456', '1987-10-07', 'Cartago, Turrialba', 'paciente741', 4, 2, 3, 1),
 (33, '272829303', 'Diego', 'Chacón Madrigal', 'diego.chacon@email.com', '87987654', '2000-02-20', 'Alajuela, Atenas', 'paciente852', 1, 1, 3, 1),
-(34, '313233343', 'Sofía', 'Picado Rojas', 'sofia.picado@email.com', '89234567', '1999-12-10', 'Heredia, Santo Domingo', 'paciente963', 2, 1, 3, 1),
+(34, '313233343', 'Sofía', 'Picado Rojas', 'sofia.picado@email.com', '89234567', '1999-12-10', 'Heredia, Santo Domingo', '$2y$10$yCPFHsMbFBtLAeCkGoQL5.e7K9EqXrRO82rtGlaCnMGb.zRj3N.nW', 2, 2, 3, 1),
 (35, '353637383', 'Eduardo', 'Blanco Cordero', 'eduardo.blanco@email.com', '88345678', '1950-05-25', 'San José, Curridabat', '$2y$10$0o0934cg7G2NcFruW670yefRz8BFdAyr14ByXWORcJ0jhvwbivQ7G', 1, 4, 3, 1),
-(36, '394041424', 'Elena', 'Vargas Trejos', 'elena.vargas@email.com', '87456789', '1948-03-08', 'Cartago, Oreamuno', 'paciente185', 2, 4, 3, 1);
+(36, '394041424', 'Elena', 'Vargas Trejos', 'elena.vargas@email.com', '87456789', '1948-03-08', 'Cartago, Oreamuno', 'paciente185', 2, 4, 3, 1),
+(37, '305550982', 'Kenneth', 'Gómez Calderón', 'kenneth.gomez@gmail.com', '647589314', '2004-11-30', 'Cartago, El Alto, San Rafael', '$2y$10$.0TyesHZ4TYZZouu19mB/O9wh3NLKZ2vtOAwUICCvSzTdA9H5ZJ2i', 1, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -885,7 +889,7 @@ ALTER TABLE `via_administracion`
 -- AUTO_INCREMENT de la tabla `cita`
 --
 ALTER TABLE `cita`
-  MODIFY `id_cita` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id_cita` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT de la tabla `enfermedad`
@@ -963,7 +967,7 @@ ALTER TABLE `medico_especialidad`
 -- AUTO_INCREMENT de la tabla `rol`
 --
 ALTER TABLE `rol`
-  MODIFY `id_rol` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_rol` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `servicio`
@@ -975,7 +979,7 @@ ALTER TABLE `servicio`
 -- AUTO_INCREMENT de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  MODIFY `id_usuario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id_usuario` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT de la tabla `vacuna`

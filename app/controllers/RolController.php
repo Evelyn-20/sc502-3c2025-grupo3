@@ -1,52 +1,159 @@
 <?php
-<<<<<<< Updated upstream
-=======
 require_once 'app/models/Rol.php';
 
 class RolController {
-    private $model;
-    public function __construct(){ $this->model = new Rol(); }
+    
+    // Crear rol
+    public function create() {
+        try {
+            $rol = new Rol();
 
-    public function getAll(){
-        header('Content-Type: application/json');
-        echo json_encode(['status'=>'success','data'=>$this->model->getAll()]);
+            $nombre = $_POST['nombre'] ?? '';
+            $descripcion = $_POST['descripcion'] ?? '';
+            $id_estado = $_POST['id_estado'] ?? 1;
+
+            // Validaciones
+            if (empty($nombre) || empty($descripcion) || empty($id_estado)) {
+                echo json_encode(['status' => 'error', 'message' => 'Todos los campos son obligatorios']);
+                return;
+            }
+
+            if ($rol->registrar($nombre, $descripcion, $id_estado)) {
+                echo json_encode(['status' => 'success', 'message' => 'Rol registrado exitosamente']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'No se pudo registrar el rol']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Error interno: ' . $e->getMessage()]);
+        }
     }
-    public function getOne(){
-        $id = intval($_GET['id'] ?? 0);
-        $r = $this->model->getById($id);
-        header('Content-Type: application/json');
-        if ($r) echo json_encode(['status'=>'success','data'=>$r]);
-        else echo json_encode(['status'=>'error','message'=>'Rol no encontrado']);
+
+    // Listar todos los roles
+    public function list() {
+        try {
+            $rol = new Rol();
+            $roles = $rol->obtenerTodos();
+
+            echo json_encode(['status' => 'success', 'data' => $roles]);
+        } catch (Exception $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Error al obtener roles: ' . $e->getMessage()]);
+        }
     }
-    public function create(){
-        $data = [
-            'nombre'=>$_POST['nombre']??'',
-            'descripcion'=>$_POST['descripcion']??'',
-            'id_estado'=>intval($_POST['id_estado']??(($_POST['estado']??'activo')==='inactivo'?2:1)),
-        ];
-        $id = $this->model->create($data);
-        header('Content-Type: application/json');
-        echo json_encode(['status'=>'success','id'=>$id]);
+
+    // Mostrar un rol específico
+    public function show() {
+        try {
+            $rol = new Rol();
+            $id = $_GET['id'] ?? 0;
+
+            if (empty($id) || !is_numeric($id)) {
+                echo json_encode(['status' => 'error', 'message' => 'ID de rol inválido']);
+                return;
+            }
+
+            $item = $rol->obtenerPorId($id);
+
+            if ($item) {
+                echo json_encode(['status' => 'success', 'data' => $item]);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Rol no encontrado']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Error al obtener rol: ' . $e->getMessage()]);
+        }
     }
-    public function update(){
-        $data = [
-            'id_rol'=>intval($_POST['id_rol']??0),
-            'nombre'=>$_POST['nombre']??'',
-            'descripcion'=>$_POST['descripcion']??'',
-            'id_estado'=>intval($_POST['id_estado']??(($_POST['estado']??'activo')==='inactivo'?2:1)),
-        ];
-        $ok = $this->model->update($data);
-        header('Content-Type: application/json');
-        echo json_encode($ok?['status':'success']:['status':'error','message':'No se pudo actualizar']);
+
+    // Actualizar rol
+    public function update() {
+        try {
+            $rol = new Rol();
+
+            $id_rol = $_POST['id_rol'] ?? 0;
+            $nombre = $_POST['nombre'] ?? '';
+            $descripcion = $_POST['descripcion'] ?? '';
+            $id_estado = $_POST['id_estado'] ?? 1;
+
+            // Validaciones
+            if (empty($id_rol) || !is_numeric($id_rol)) {
+                echo json_encode(['status' => 'error', 'message' => 'ID de rol inválido']);
+                return;
+            }
+
+            if (empty($nombre) || empty($descripcion) || empty($id_estado)) {
+                echo json_encode(['status' => 'error', 'message' => 'Todos los campos son obligatorios']);
+                return;
+            }
+
+            if ($rol->actualizar($id_rol, $nombre, $descripcion, $id_estado)) {
+                echo json_encode(['status' => 'success', 'message' => 'Rol actualizado exitosamente']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'No se pudo actualizar el rol']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Error al actualizar rol: ' . $e->getMessage()]);
+        }
     }
-    public function enable(){ $this->setEstado(1); }
-    public function disable(){ $this->setEstado(2); }
-    private function setEstado($estado){
-        $id = intval($_POST['id_rol'] ?? $_POST['id'] ?? 0);
-        $ok = $this->model->setEstado($id, $estado);
-        header('Content-Type: application/json');
-        echo json_encode($ok?['status'=>'success']:['status'=>'error','message'=>'No se pudo cambiar el estado']);
+
+    // Actualizar solo el estado del rol
+    public function updateStatus() {
+        try {
+            $rol = new Rol();
+
+            $id_rol = $_POST['id_rol'] ?? 0;
+            $id_estado = $_POST['id_estado'] ?? 0;
+
+            // Validaciones
+            if (empty($id_rol) || !is_numeric($id_rol)) {
+                echo json_encode(['status' => 'error', 'message' => 'ID de rol inválido']);
+                return;
+            }
+
+            if (empty($id_estado) || !is_numeric($id_estado)) {
+                echo json_encode(['status' => 'error', 'message' => 'Estado inválido']);
+                return;
+            }
+
+            if ($rol->actualizarEstado($id_rol, $id_estado)) {
+                echo json_encode(['status' => 'success', 'message' => 'Estado del rol actualizado']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'No se pudo actualizar el estado']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Error al actualizar estado: ' . $e->getMessage()]);
+        }
+    }
+
+    // Eliminar rol
+    public function delete() {
+        try {
+            $rol = new Rol();
+            $id = $_POST['id'] ?? 0;
+
+            if (empty($id) || !is_numeric($id)) {
+                echo json_encode(['status' => 'error', 'message' => 'ID de rol inválido']);
+                return;
+            }
+
+            if ($rol->eliminar($id)) {
+                echo json_encode(['status' => 'success', 'message' => 'Rol eliminado exitosamente']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'No se pudo eliminar el rol. Puede que tenga usuarios asignados.']);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Error al eliminar rol: ' . $e->getMessage()]);
+        }
+    }
+
+    // Obtener estados disponibles
+    public function getStates() {
+        try {
+            $rol = new Rol();
+            $estados = $rol->obtenerEstados();
+
+            echo json_encode(['status' => 'success', 'data' => $estados]);
+        } catch (Exception $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Error al obtener estados: ' . $e->getMessage()]);
+        }
     }
 }
 ?>
->>>>>>> Stashed changes

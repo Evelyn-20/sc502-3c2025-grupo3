@@ -25,25 +25,30 @@
           </div>
         </div>
         <table class="custom-table table">
-          <thead>
-            <tr>
-              <th>Cédula</th>
-              <th>Nombre Paciente</th>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th>Servicio</th>
-              <th>Especialidad</th>
-              <th>Médico</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-        </table>
+    <thead>
+      <tr>
+        <th>Cédula</th>
+        <th>Nombre Paciente</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>Servicio</th>
+        <th>Especialidad</th>
+        <th>Médico</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Las citas se cargarán aquí via AJAX -->
+    </tbody>
+  </table>
       </div>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-  <script src="../js/scripts.js" defer></script>
+  <script src="../js/jquery-3.7.1.min.js"></script>
+  <script src="../js/admin-citas.js"></script>
 </body>
 </html>

@@ -20,25 +20,25 @@
         <form id="form-registro">
           <div class="row mb-4">
             <div class="col-md-4 mb-3">
-              <label for="cedula" class="form-label fw-bold">Cédula</label>
-              <input type="text" id="cedula" name="cedula" class="form-control" />
+              <label for="cedula" class="form-label fw-bold">Cédula *</label>
+              <input type="text" id="cedula" name="cedula" class="form-control" required />
             </div>
 
             <div class="col-md-4 mb-3">
-              <label for="nombre" class="form-label fw-bold">Nombre</label>
-              <input type="text" id="nombre" name="nombre" class="form-control" />
+              <label for="nombre" class="form-label fw-bold">Nombre *</label>
+              <input type="text" id="nombre" name="nombre" class="form-control" required />
             </div>
 
             <div class="col-md-4 mb-3">
-              <label for="apellidos" class="form-label fw-bold">Apellidos</label>
-              <input type="text" id="apellidos" name="apellidos" class="form-control" />
+              <label for="apellidos" class="form-label fw-bold">Apellidos *</label>
+              <input type="text" id="apellidos" name="apellidos" class="form-control" required />
             </div>
           </div>
 
           <div class="row mb-4">
             <div class="col-md-4 mb-3">
-              <label for="email" class="form-label fw-bold">Correo electrónico</label>
-              <input type="email" id="email" name="email" class="form-control" />
+              <label for="email" class="form-label fw-bold">Correo electrónico *</label>
+              <input type="email" id="email" name="email" class="form-control" required />
             </div>
 
             <div class="col-md-4 mb-3">
@@ -54,8 +54,8 @@
 
           <div class="row mb-4">
             <div class="col-md-8 mb-3">
-              <label for="direccion" class="form-label fw-bold">Dirección</label>
-              <textarea id="direccion" name="direccion" class="form-control" rows="4"></textarea>
+              <label for="direccion" class="form-label fw-bold">Dirección *</label>
+              <textarea id="direccion" name="direccion" class="form-control" rows="4" required></textarea>
             </div>
 
             <div class="col-md-4 mb-3">
@@ -80,19 +80,25 @@
 
           <div class="row mb-4">
             <div class="col-md-6 mb-3">
-              <label for="password" class="form-label fw-bold">Contraseña</label>
-              <input type="password" id="password" name="password" class="form-control" />
+              <label for="password" class="form-label fw-bold">Contraseña *</label>
+              <input type="password" id="password" name="password" class="form-control" required />
             </div>
 
             <div class="col-md-6 mb-3">
-              <label for="confirm-password" class="form-label fw-bold">Verificar Contraseña</label>
-              <input type="password" id="confirm-password" name="confirm_password" class="form-control" />
+              <label for="confirm-password" class="form-label fw-bold">Verificar Contraseña *</label>
+              <input type="password" id="confirm-password" name="confirm_password" class="form-control" required />
             </div>
           </div>
 
           <div class="row">
             <div class="col-12 text-center">
               <button type="submit" class="btn btn-register">Registrarse</button>
+            </div>
+          </div>
+          
+          <div class="row mt-3">
+            <div class="col-12 text-center">
+              <small class="text-muted">Los campos marcados con * son obligatorios</small>
             </div>
           </div>
         </form>

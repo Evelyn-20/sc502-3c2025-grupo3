@@ -5,32 +5,37 @@ class MedicamentoController {
     
     // Asignar medicamento a un paciente
     public function asignar() {
-        $medicamento = new Medicamento();
+        try {
+            $medicamento = new Medicamento();
 
-        $nombre_completo = $_POST['nombre_completo'] ?? '';
-        $fecha_preescripcion = $_POST['fecha_preescripcion'] ?? date('Y-m-d');
-        $tiempo_tratamiento = $_POST['tiempo_tratamiento'] ?? '';
-        $indicaciones = $_POST['indicaciones'] ?? '';
-        $id_medicamento = $_POST['id_medicamento'] ?? 0;
-        $id_paciente = $_POST['id_paciente'] ?? 0;
-        $id_estado = $_POST['id_estado'] ?? 1;
+            $nombre_completo = $_POST['nombre_completo'] ?? '';
+            $fecha_preescripcion = $_POST['fecha_preescripcion'] ?? date('Y-m-d');
+            $tiempo_tratamiento = $_POST['tiempo_tratamiento'] ?? '';
+            $indicaciones = $_POST['indicaciones'] ?? '';
+            $id_medicamento = (int)($_POST['id_medicamento'] ?? 0);
+            $id_paciente = (int)($_POST['id_paciente'] ?? 0);
+            $id_estado = (int)($_POST['id_estado'] ?? 1);
 
-        // Validaciones básicas
-        if (empty($nombre_completo) || empty($tiempo_tratamiento) || empty($indicaciones) || $id_medicamento == 0 || $id_paciente == 0) {
-            echo json_encode(['status' => 'error', 'message' => 'Todos los campos son requeridos']);
-            return;
-        }
+            // Validaciones básicas
+            if (empty($nombre_completo) || empty($tiempo_tratamiento) || empty($indicaciones) || $id_medicamento == 0 || $id_paciente == 0) {
+                echo json_encode(['status' => 'error', 'message' => 'Todos los campos son requeridos']);
+                return;
+            }
 
-        // Verificar si el medicamento ya está asignado al paciente
-        if ($medicamento->verificarMedicamentoAsignado($id_medicamento, $id_paciente)) {
-            echo json_encode(['status' => 'error', 'message' => 'Este medicamento ya está asignado al paciente']);
-            return;
-        }
+            // Verificar si el medicamento ya está asignado al paciente
+            if ($medicamento->verificarMedicamentoAsignado($id_medicamento, $id_paciente)) {
+                echo json_encode(['status' => 'error', 'message' => 'Este medicamento ya está asignado al paciente']);
+                return;
+            }
 
-        if ($medicamento->asignarMedicamento($nombre_completo, $fecha_preescripcion, $tiempo_tratamiento, $indicaciones, $id_medicamento, $id_paciente, $id_estado)) {
-            echo json_encode(['status' => 'success', 'message' => 'Medicamento asignado exitosamente']);
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'No se pudo asignar el medicamento']);
+            if ($medicamento->asignarMedicamento($nombre_completo, $fecha_preescripcion, $tiempo_tratamiento, $indicaciones, $id_medicamento, $id_paciente, $id_estado)) {
+                echo json_encode(['status' => 'success', 'message' => 'Medicamento asignado exitosamente']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'No se pudo asignar el medicamento']);
+            }
+        } catch (Exception $e) {
+            error_log("Error en asignar: " . $e->getMessage());
+            echo json_encode(['status' => 'error', 'message' => 'Error interno del servidor']);
         }
     }
 
@@ -51,7 +56,7 @@ class MedicamentoController {
     public function listMedicamentosPaciente() {
         try {
             $medicamento = new Medicamento();
-            $id_paciente = $_GET['id_paciente'] ?? 0;
+            $id_paciente = (int)($_GET['id_paciente'] ?? 0);
 
             if ($id_paciente == 0) {
                 echo json_encode(['status' => 'error', 'message' => 'ID de paciente requerido']);
@@ -66,11 +71,11 @@ class MedicamentoController {
         }
     }
 
-    // Mostrar medicamento específico asignado (CORREGIDO)
+    // Mostrar medicamento específico asignado
     public function showMedicamentoPaciente() {
         try {
             $medicamento = new Medicamento();
-            $id = $_GET['id'] ?? 0;
+            $id = (int)($_GET['id'] ?? 0);
 
             if ($id == 0) {
                 echo json_encode(['status' => 'error', 'message' => 'ID requerido']);
@@ -95,16 +100,21 @@ class MedicamentoController {
         try {
             $medicamento = new Medicamento();
 
-            $id_medicamento_paciente = $_POST['id_medicamento_paciente'] ?? 0;
+            $id_medicamento_paciente = (int)($_POST['id_medicamento_paciente'] ?? 0);
             $nombre_completo = $_POST['nombre_completo'] ?? '';
             $fecha_preescripcion = $_POST['fecha_preescripcion'] ?? '';
             $tiempo_tratamiento = $_POST['tiempo_tratamiento'] ?? '';
             $indicaciones = $_POST['indicaciones'] ?? '';
-            $id_medicamento = $_POST['id_medicamento'] ?? 0;
-            $id_estado = $_POST['id_estado'] ?? 1;
+            $id_medicamento = (int)($_POST['id_medicamento'] ?? 0);
+            $id_estado = (int)($_POST['id_estado'] ?? 1);
 
             if ($id_medicamento_paciente == 0) {
                 echo json_encode(['status' => 'error', 'message' => 'ID de medicamento requerido']);
+                return;
+            }
+
+            if (empty($nombre_completo) || empty($fecha_preescripcion) || empty($tiempo_tratamiento) || empty($indicaciones) || $id_medicamento == 0) {
+                echo json_encode(['status' => 'error', 'message' => 'Todos los campos son requeridos']);
                 return;
             }
 
@@ -124,8 +134,13 @@ class MedicamentoController {
         try {
             $medicamento = new Medicamento();
 
-            $id_medicamento_paciente = $_POST['id_medicamento_paciente'] ?? 0;
-            $id_estado = $_POST['id_estado'] ?? 0;
+            $id_medicamento_paciente = (int)($_POST['id_medicamento_paciente'] ?? 0);
+            $id_estado = (int)($_POST['id_estado'] ?? 0);
+
+            if ($id_medicamento_paciente == 0 || $id_estado == 0) {
+                echo json_encode(['status' => 'error', 'message' => 'ID de medicamento y estado requeridos']);
+                return;
+            }
 
             if ($medicamento->actualizarEstadoMedicamentoPaciente($id_medicamento_paciente, $id_estado)) {
                 echo json_encode(['status' => 'success', 'message' => 'Estado actualizado exitosamente']);
@@ -142,7 +157,12 @@ class MedicamentoController {
     public function eliminar() {
         try {
             $medicamento = new Medicamento();
-            $id = $_POST['id'] ?? 0;
+            $id = (int)($_POST['id'] ?? 0);
+
+            if ($id == 0) {
+                echo json_encode(['status' => 'error', 'message' => 'ID requerido']);
+                return;
+            }
 
             if ($medicamento->eliminarMedicamentoPaciente($id)) {
                 echo json_encode(['status' => 'success', 'message' => 'Medicamento eliminado exitosamente']);
@@ -159,7 +179,7 @@ class MedicamentoController {
     public function listMedicamentosActivos() {
         try {
             $medicamento = new Medicamento();
-            $id_paciente = $_GET['id_paciente'] ?? 0;
+            $id_paciente = (int)($_GET['id_paciente'] ?? 0);
 
             if ($id_paciente == 0) {
                 // Si no se especifica ID, usar el de sesión
@@ -187,7 +207,7 @@ class MedicamentoController {
     public function buscarPaciente() {
         try {
             $medicamento = new Medicamento();
-            $cedula = $_GET['cedula'] ?? '';
+            $cedula = trim($_GET['cedula'] ?? '');
 
             if (empty($cedula)) {
                 echo json_encode(['status' => 'error', 'message' => 'Cédula requerida']);
@@ -225,16 +245,29 @@ class MedicamentoController {
         }
     }
 
+    // Listar todas las medicaciones de pacientes (para médicos)
+    public function listMedicacionesPacientes() {
+        try {
+            $medicamento = new Medicamento();
+            $medicaciones = $medicamento->obtenerTodasMedicacionesPacientes();
+
+            echo json_encode(['status' => 'success', 'data' => $medicaciones]);
+        } catch (Exception $e) {
+            error_log("Error en listMedicacionesPacientes: " . $e->getMessage());
+            echo json_encode(['status' => 'error', 'message' => 'Error al obtener medicaciones de pacientes']);
+        }
+    }
+
     // MÉTODOS IMPLEMENTADOS para el catálogo general de medicamentos
     public function create() {
         try {
             $medicamento = new Medicamento();
             
             $nombre = $_POST['nombre'] ?? '';
-            $id_forma_farmaceutica = $_POST['id_forma_farmaceutica'] ?? 0;
-            $id_grupo_terapeutico = $_POST['id_grupo_terapeutico'] ?? 0;
-            $id_via_administracion = $_POST['id_via_administracion'] ?? 0;
-            $id_estado = $_POST['id_estado'] ?? 1;
+            $id_forma_farmaceutica = (int)($_POST['id_forma_farmaceutica'] ?? 0);
+            $id_grupo_terapeutico = (int)($_POST['id_grupo_terapeutico'] ?? 0);
+            $id_via_administracion = (int)($_POST['id_via_administracion'] ?? 0);
+            $id_estado = (int)($_POST['id_estado'] ?? 1);
 
             if (empty($nombre) || $id_forma_farmaceutica == 0 || $id_grupo_terapeutico == 0 || $id_via_administracion == 0) {
                 echo json_encode(['status' => 'error', 'message' => 'Todos los campos son requeridos']);
@@ -267,7 +300,7 @@ class MedicamentoController {
     public function show() {
         try {
             $medicamento = new Medicamento();
-            $id = $_GET['id'] ?? 0;
+            $id = (int)($_GET['id'] ?? 0);
 
             if ($id == 0) {
                 echo json_encode(['status' => 'error', 'message' => 'ID requerido']);
@@ -291,15 +324,20 @@ class MedicamentoController {
         try {
             $medicamento = new Medicamento();
             
-            $id = $_POST['id'] ?? 0;
+            $id = (int)($_POST['id'] ?? 0);
             $nombre = $_POST['nombre'] ?? '';
-            $id_forma_farmaceutica = $_POST['id_forma_farmaceutica'] ?? 0;
-            $id_grupo_terapeutico = $_POST['id_grupo_terapeutico'] ?? 0;
-            $id_via_administracion = $_POST['id_via_administracion'] ?? 0;
-            $id_estado = $_POST['id_estado'] ?? 1;
+            $id_forma_farmaceutica = (int)($_POST['id_forma_farmaceutica'] ?? 0);
+            $id_grupo_terapeutico = (int)($_POST['id_grupo_terapeutico'] ?? 0);
+            $id_via_administracion = (int)($_POST['id_via_administracion'] ?? 0);
+            $id_estado = (int)($_POST['id_estado'] ?? 1);
 
             if ($id == 0) {
                 echo json_encode(['status' => 'error', 'message' => 'ID requerido']);
+                return;
+            }
+
+            if (empty($nombre) || $id_forma_farmaceutica == 0 || $id_grupo_terapeutico == 0 || $id_via_administracion == 0) {
+                echo json_encode(['status' => 'error', 'message' => 'Todos los campos son requeridos']);
                 return;
             }
 
@@ -318,8 +356,13 @@ class MedicamentoController {
         try {
             $medicamento = new Medicamento();
             
-            $id = $_POST['id'] ?? 0;
-            $id_estado = $_POST['id_estado'] ?? 0;
+            $id = (int)($_POST['id'] ?? 0);
+            $id_estado = (int)($_POST['id_estado'] ?? 0);
+
+            if ($id == 0 || $id_estado == 0) {
+                echo json_encode(['status' => 'error', 'message' => 'ID y estado requeridos']);
+                return;
+            }
 
             if ($medicamento->actualizarEstado($id, $id_estado)) {
                 echo json_encode(['status' => 'success', 'message' => 'Estado actualizado exitosamente']);
@@ -335,7 +378,12 @@ class MedicamentoController {
     public function delete() {
         try {
             $medicamento = new Medicamento();
-            $id = $_POST['id'] ?? 0;
+            $id = (int)($_POST['id'] ?? 0);
+
+            if ($id == 0) {
+                echo json_encode(['status' => 'error', 'message' => 'ID requerido']);
+                return;
+            }
 
             if ($medicamento->eliminar($id)) {
                 echo json_encode(['status' => 'success', 'message' => 'Medicamento eliminado exitosamente']);

@@ -379,3 +379,49 @@ h1 {
   text-decoration: none;
   color: white;
 }
+
+/* Agregar estos estilos al final de tu archivo style.css */
+
+/* Fix para botones de acción en tabla */
+.custom-table td {
+  text-align: center;
+  padding: 20px;
+  border: none;
+  color: #666;
+  background-color: #f8f9fa;
+  height: 60px;
+  vertical-align: middle; /* Agregado para centrar verticalmente */
+}
+
+/* Contenedor para botones de acción */
+.custom-table td:last-child {
+  white-space: nowrap; /* Evita que los botones se rompan en líneas */
+}
+
+/* Estilos para botones pequeños en tabla */
+.custom-table .btn-sm {
+  display: inline-block;
+  margin-right: 5px; /* Espacio entre botones */
+  min-width: 35px;
+  height: 32px;
+  vertical-align: middle;
+}
+
+.custom-table .btn-sm:last-child {
+  margin-right: 0; /* Quitar margen del último botón */
+}
+
+/* Asegurar que los iconos estén centrados */
+.custom-table .btn-sm i {
+  line-height: 1;
+}
+
+/* Responsive para mantener botones en línea en móviles */
+@media (max-width: 768px) {
+  .custom-table .btn-sm {
+    min-width: 30px;
+    height: 28px;
+    margin-right: 3px;
+    font-size: 12px;
+  }
+}

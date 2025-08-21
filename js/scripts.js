@@ -1,7 +1,5 @@
 /*
-
   Script para el Administrador
-
 */
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -145,107 +143,152 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-
 /*
-
-  Script para el Registro
-
+  Script para el Registro - VERSIÓN CORREGIDA
 */
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('form-registro');
-  form.addEventListener('submit', onSubmitRegistro);
+  if (form) {
+    form.addEventListener('submit', onSubmitRegistro);
+  }
 });
 
 function onSubmitRegistro(event) {
   event.preventDefault();
+  console.log('Formulario de registro enviado');
 
+  // Limpiar errores anteriores
   document.querySelectorAll('.error-message').forEach(el => el.remove());
 
-  const pwd = document.getElementById('password').value.trim();
-  const pwdVerify = document.getElementById('confirm-password').value.trim();
+  // Obtener valores del formulario
+  const formData = new FormData(event.target);
+  
+  // Validaciones básicas
+  const requiredFields = {
+    'cedula': 'Cédula',
+    'nombre': 'Nombre', 
+    'apellidos': 'Apellidos',
+    'email': 'Correo electrónico',
+    'direccion': 'Dirección',
+    'password': 'Contraseña',
+    'confirm_password': 'Confirmar contraseña'
+  };
 
+  let hasErrors = false;
 
-  if (!pwd || !pwdVerify) {
-    if (!pwd) showError('password', 'Este campo es obligatorio');
-    if (!pwdVerify) showError('confirm-password', 'Este campo es obligatorio');
+  // Verificar campos requeridos
+  for (const [fieldName, label] of Object.entries(requiredFields)) {
+    const value = formData.get(fieldName);
+    if (!value || value.trim() === '') {
+      showErrorByFieldName(fieldName, `${label} es obligatorio`);
+      hasErrors = true;
+    }
+  }
+
+  // Validar que las contraseñas coincidan
+  const password = formData.get('password');
+  const confirmPassword = formData.get('confirm_password');
+  
+  if (password && confirmPassword && password !== confirmPassword) {
+    showErrorByFieldName('confirm_password', 'Las contraseñas no coinciden');
+    hasErrors = true;
+  }
+
+  // Validar formato de email
+  const email = formData.get('email');
+  if (email && !email.includes('@')) {
+    showErrorByFieldName('email', 'El formato del correo es inválido');
+    hasErrors = true;
+  }
+
+  if (hasErrors) {
     return;
   }
-  if (pwd !== pwdVerify) {
-    showError('confirm-password', 'Las contraseñas no coinciden');
-    return;
-  }
 
-  const datos = new FormData(event.target);
-  const registro = Object.fromEntries(datos.entries());
-  console.log('Datos de registro:', registro);
+  // Mapear campos del frontend al backend
+  const dataToSend = new FormData();
+  dataToSend.append('cedula', formData.get('cedula'));
+  dataToSend.append('nombre', formData.get('nombre'));
+  dataToSend.append('apellidos', formData.get('apellidos'));
+  dataToSend.append('correo', formData.get('email')); // CAMBIO: email -> correo
+  dataToSend.append('telefono', formData.get('telefono') || '');
+  dataToSend.append('fecha_nacimiento', formData.get('fecha_nacimiento') || '');
+  dataToSend.append('direccion', formData.get('direccion'));
+  dataToSend.append('password', formData.get('password'));
+  
+  // Mapear género y estado civil a IDs
+  const genero = formData.get('genero');
+  const estadoCivil = formData.get('estado_civil');
+  
+  // Mapeo simple para géneros
+  let idGenero = 0;
+  if (genero === 'masculino') idGenero = 1;
+  else if (genero === 'femenino') idGenero = 2;
+  else if (genero === 'otro') idGenero = 3;
+  
+  // Mapeo simple para estado civil
+  let idEstadoCivil = 0;
+  if (estadoCivil === 'soltero') idEstadoCivil = 1;
+  else if (estadoCivil === 'casado') idEstadoCivil = 2;
+  else if (estadoCivil === 'divorciado') idEstadoCivil = 3;
+  else if (estadoCivil === 'viudo') idEstadoCivil = 4;
+  
+  dataToSend.append('id_genero', idGenero);
+  dataToSend.append('id_estado_civil', idEstadoCivil);
+  dataToSend.append('id_rol', 3); // Paciente por defecto
+  dataToSend.append('id_estado', 1); // Activo por defecto
 
-  alert('¡Registro exitoso!');
+  console.log('Enviando datos al servidor...');
 
-
-  event.target.reset();
+  // Enviar datos al servidor
+  fetch('../router.php?action=register', {
+    method: 'POST',
+    body: dataToSend
+  })
+  .then(response => {
+    console.log('Respuesta recibida:', response.status);
+    return response.json();
+  })
+  .then(data => {
+    console.log('Datos de respuesta:', data);
+    if (data.success) {
+      alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
+      event.target.reset();
+      // Opcional: redirigir al login
+      window.location.href = 'Login.php';
+    } else {
+      alert('Error en el registro: ' + (data.message || 'Error desconocido'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error de conexión. Por favor, intenta de nuevo.');
+  });
 }
 
-function showError(fieldId, message) {
-  const field = document.getElementById(fieldId);
+function showErrorByFieldName(fieldName, message) {
+  const field = document.getElementById(fieldName) || 
+                 document.querySelector(`[name="${fieldName}"]`);
+  if (field) {
+    showError(field, message);
+  }
+}
+
+function showError(field, message) {
   const err = document.createElement('div');
   err.className = 'error-message';
   err.textContent = message;
+  err.style.color = 'red';
+  err.style.fontSize = '0.875rem';
+  err.style.marginTop = '0.25rem';
   field.parentElement.appendChild(err);
 }
 
 /*
-
   Script para el Modal
-
 */
 function deshabilitarRol() {
   console.log('Rol deshabilitado');
-
   const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmacion'));
   modal.hide();
 }
-
-/*
-
-  Script para el login
-
-*/
-
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.querySelector("form");
-  if (!form) return;
-
-  const cedulaAdmin = "123456789";
-  const passwordAdmin = "admin123";
-  
-  const cedulaDoctor = "987654321";
-  const passwordDoctor = "medico123";
-  
-  const cedulaPaciente = "456789123";
-  const passwordPaciente = "paciente123";
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    
-    const cedula = document.getElementById("cedula").value.trim();
-    const password = document.getElementById("password").value.trim();
-    
-    if (!cedula || !password) {
-      alert("Por favor complete todos los campos");
-      return;
-    }
-    
-    if (cedula === cedulaAdmin && password === passwordAdmin) {
-      window.location.href = "../Administrativo/inicioAdmin.html";
-    } 
-    else if (cedula === cedulaDoctor && password === passwordDoctor) {
-      window.location.href = "../Medicos/inicioMedico.html";
-    } 
-    else if (cedula === cedulaPaciente && password === passwordPaciente) {
-      window.location.href = "../Paciente/inicioPaciente.html";
-    } 
-    else {
-      alert("Credenciales incorrectas");
-    }
-  });
-});

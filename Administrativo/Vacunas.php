@@ -13,10 +13,10 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-10">
-        <h1 class="text-center mb-5">Vacunas</h1>
+        <h1 class="text-center mb-5">Catálogo de Vacunas</h1>
         <div class="row mb-4">
           <div class="col-md-12">
-            <input type="text" class="form-control" placeholder="Buscar">
+            <input type="text" class="form-control" placeholder="Buscar vacuna..." id="buscarVacuna">
           </div>
         </div>
         <div class="row mb-4">
@@ -29,7 +29,6 @@
             <tr>
               <th>Nombre</th>
               <th>Enfermedad</th>
-              <th>Grupo</th>
               <th>Esquema Vacunación</th>
               <th>Vía Administración</th>
               <th>Estado</th>
@@ -37,28 +36,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>COVID-19</td>
-              <td>Coronavirus</td>
-              <td>Adultos</td>
-              <td>2 dosis + refuerzo</td>
-              <td>Intramuscular</td>
-              <td>Activo</td>
-              <td>
-                <a type="button" class="btn-action btn-editar me-2" href="EditarVacuna.html" title="Editar">
-                    <i class="fas fa-edit"></i> Editar
-                </a>
-                <button class="btn-action btn-deshabilitar" title="Deshabilitar" data-bs-toggle="modal" data-bs-target="#modalConfirmacion">
-                  <i class="fas fa-ban"></i> Deshabilitar
-                </button>
-              </td>
-            </tr>
+            <!-- Los datos se cargarán dinámicamente -->
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
+  <!-- Modal de confirmación para deshabilitar -->
   <div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -75,14 +60,15 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-danger" onclick="deshabilitarMedicamento()">Deshabilitar</button>
+          <button type="button" class="btn btn-danger" onclick="deshabilitarVacuna()">Deshabilitar</button>
         </div>
       </div>
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-  <script src="../js/scripts.js" defer></script>
+  <script src="../js/admin-vacunas.js"></script>
 </body>
 </html>

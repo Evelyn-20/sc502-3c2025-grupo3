@@ -16,12 +16,12 @@
         <div class="logo"></div>
       </a>
       <div class="navbar-nav me-auto">
-        <a class="nav-link" href="MedicoEspecialidad.php">Médico-Especialidad</a>
+        <a class="nav-link" href="Asociacion.php">Médico-Especialidad</a>
         <a class="nav-link" href="Usuarios.php">Usuarios</a>
-        <a class="nav-link" href="RegistrarRol.html">Roles</a>
-        <a class="nav-link" href="RegistrarCita.html">Citas</a>
-        <a class="nav-link" href="RegistrarMedicamentos.html">Medicamentos</a>
-        <a class="nav-link" href="RegistrarVacunas.html">Vacunas</a>
+        <a class="nav-link" href="Roles.php">Roles</a>
+        <a class="nav-link" href="Citas.php">Citas</a>
+        <a class="nav-link" href="Medicamentos.php">Medicamentos</a>
+        <a class="nav-link" href="Vacunas.php">Vacunas</a>
       </div>
       <div class="d-flex align-items-center">
         <a href="../router.php?action=logout" class="text-black me-3 text-decoration-none" 
@@ -37,67 +37,41 @@
 
         <form id="form-registro">
           <div class="row mb-4">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
               <label for="nombre" class="form-label fw-bold">Nombre</label>
-              <input type="text" id="nombre" name="nombre" class="form-control" />
-              
-              <label for="esquema" class="form-label fw-bold">Esquema Vacunación</label>
-              <select id="esquema" name="esquema_vacunacion" class="form-select">
-                <option value="">-- Selecciona --</option>
-                <option value="unidosis">Unidosis</option>
-                <option value="multidosis">Multidosis</option>
-              </select>
-              
-              <label for="estado" class="form-label fw-bold">Estado</label>
-              <select id="estado" name="estado" class="form-select">
-                <option value="">-- Selecciona --</option>
-                <option value="activo">Activo</option>
-                <option value="inactivo">Inactivo</option>
-              </select>
+              <input type="text" id="nombre" name="nombre" class="form-control" required />
             </div>
-
-            <div class="col-md-4 mb-3">
+            
+            <div class="col-md-6 mb-3">
               <label for="enfermedad" class="form-label fw-bold">Enfermedad</label>
-              <select id="enfermedad" name="enfermedad" class="form-select">
+              <select id="enfermedad" name="enfermedad" class="form-select" required>
                 <option value="">-- Selecciona --</option>
-                <option value="sarampion">Sarampión</option>
-                <option value="influenza">Influenza</option>
-                <option value="covid-19">COVID-19</option>
-              </select>
-              
-              <label for="via-administracion" class="form-label fw-bold">Vía Administración</label>
-              <select id="via-administracion" name="via_administracion" class="form-select">
-                <option value="">-- Selecciona --</option>
-                <option value="intramuscular">Intramuscular</option>
-                <option value="subcutanea">Subcutánea</option>
-                <option value="oral">Oral</option>
               </select>
             </div>
+          </div>
 
-            <div class="col-md-4 mb-3">
-              <label class="form-label fw-bold">Grupo</label>
-              <div class="checkbox-group">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="grupo" value="mujeres" id="mujeres" />
-                  <label class="form-check-label" for="mujeres">Mujeres</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="grupo" value="hombres" id="hombres" />
-                  <label class="form-check-label" for="hombres">Hombres</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="grupo" value="ninos" id="ninos" />
-                  <label class="form-check-label" for="ninos">Niños</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="grupo" value="adultos" id="adultos" />
-                  <label class="form-check-label" for="adultos">Adultos mayores</label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="grupo" value="todos" id="todos" />
-                  <label class="form-check-label" for="todos">Toda la población</label>
-                </div>
-              </div>
+          <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+              <label for="esquema" class="form-label fw-bold">Esquema Vacunación</label>
+              <select id="esquema" name="esquema_vacunacion" class="form-select" required>
+                <option value="">-- Selecciona --</option>
+              </select>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <label for="via-administracion" class="form-label fw-bold">Vía Administración</label>
+              <select id="via-administracion" name="via_administracion" class="form-select" required>
+                <option value="">-- Selecciona --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+              <label for="estado" class="form-label fw-bold">Estado</label>
+              <select id="estado" name="estado" class="form-select" required>
+                <option value="">-- Selecciona --</option>
+              </select>
             </div>
           </div>
 
@@ -111,8 +85,10 @@
     </div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-  <script src="../js/scripts.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="../js/admin-vacunas.js"></script>
 </body>
 
 </html>

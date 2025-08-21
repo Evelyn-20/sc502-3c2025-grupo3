@@ -10,31 +10,41 @@ class Medicamento {
 
     // Asignar medicamento a un paciente
     public function asignarMedicamento($nombre_completo, $fecha_preescripcion, $tiempo_tratamiento, $indicaciones, $id_medicamento, $id_paciente, $id_estado = 1) {
-        $stmt = $this->db->prepare("
-            INSERT INTO medicamento_paciente 
-            (nombre_completo, fecha_preescripcion, tiempo_tratamiento, indicaciones, id_medicamento, id_paciente, id_estado) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        ");
-        $stmt->bind_param("ssssiii", $nombre_completo, $fecha_preescripcion, $tiempo_tratamiento, $indicaciones, $id_medicamento, $id_paciente, $id_estado);
-        return $stmt->execute();
+        try {
+            $stmt = $this->db->prepare("
+                INSERT INTO medicamento_paciente 
+                (nombre_completo, fecha_preescripcion, tiempo_tratamiento, indicaciones, id_medicamento, id_paciente, id_estado) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->bind_param("ssssiii", $nombre_completo, $fecha_preescripcion, $tiempo_tratamiento, $indicaciones, $id_medicamento, $id_paciente, $id_estado);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error en asignarMedicamento: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function obtenerTodos() {
-        $stmt = $this->db->prepare("
-            SELECT m.*, 
-                   ff.nombre as forma_farmaceutica,
-                   gt.nombre as grupo_terapeutico,
-                   va.nombre as via_administracion,
-                   e.nombre as estado
-            FROM medicamento m
-            LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
-            LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
-            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
-            LEFT JOIN estado e ON m.id_estado = e.id_estado
-            ORDER BY m.nombre ASC
-        ");
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        try {
+            $stmt = $this->db->prepare("
+                SELECT m.*, 
+                       ff.nombre as forma_farmaceutica,
+                       gt.nombre as grupo_terapeutico,
+                       va.nombre as via_administracion,
+                       e.nombre as estado
+                FROM medicamento m
+                LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+                LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+                LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+                LEFT JOIN estado e ON m.id_estado = e.id_estado
+                ORDER BY m.nombre ASC
+            ");
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en obtenerTodos: " . $e->getMessage());
+            return [];
+        }
     }
 
     // Obtener medicamentos del usuario en sesión
@@ -52,255 +62,386 @@ class Medicamento {
 
     // Obtener medicamentos de un paciente específico
     public function obtenerMedicamentosPaciente($id_paciente) {
-        $stmt = $this->db->prepare("
-            SELECT mp.*, 
-                m.nombre as nombre_medicamento,
-                ff.nombre as forma_farmaceutica,
-                gt.nombre as grupo_terapeutico,
-                va.nombre as via_administracion,
-                e.nombre as estado,
-                CONCAT(u.nombre, ' ', u.apellidos) as nombre_paciente
-            FROM medicamento_paciente mp
-            INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
-            INNER JOIN usuario u ON mp.id_paciente = u.id_usuario
-            LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
-            LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
-            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
-            LEFT JOIN estado e ON mp.id_estado = e.id_estado
-            WHERE mp.id_paciente = ?
-            ORDER BY mp.fecha_preescripcion DESC
-        ");
-        $stmt->bind_param("i", $id_paciente);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        try {
+            $stmt = $this->db->prepare("
+                SELECT mp.*, 
+                    m.nombre as nombre_medicamento,
+                    ff.nombre as forma_farmaceutica,
+                    gt.nombre as grupo_terapeutico,
+                    va.nombre as via_administracion,
+                    e.nombre as estado,
+                    u.cedula_usuario,
+                    CONCAT(u.nombre, ' ', u.apellidos) as nombre_paciente
+                FROM medicamento_paciente mp
+                INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
+                INNER JOIN usuario u ON mp.id_paciente = u.id_usuario
+                LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+                LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+                LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+                LEFT JOIN estado e ON mp.id_estado = e.id_estado
+                WHERE mp.id_paciente = ?
+                ORDER BY mp.fecha_preescripcion DESC
+            ");
+            $stmt->bind_param("i", $id_paciente);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en obtenerMedicamentosPaciente: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function obtenerMisMedicamentos($id_paciente) {
-        $stmt = $this->db->prepare("
-            SELECT mp.id_medicamento_paciente,
-                mp.fecha_preescripcion,
-                mp.tiempo_tratamiento, 
-                mp.indicaciones,
-                mp.id_estado,
-                mp.id_medicamento,
-                mp.id_paciente,
-                m.nombre as nombre_medicamento,
-                ff.nombre as forma_farmaceutica,
-                gt.nombre as grupo_terapeutico,
-                va.nombre as via_administracion,
-                e.nombre as estado
-            FROM medicamento_paciente mp
-            INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
-            LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
-            LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
-            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
-            LEFT JOIN estado e ON mp.id_estado = e.id_estado
-            WHERE mp.id_paciente = ?
-            ORDER BY mp.fecha_preescripcion DESC
-        ");
-        $stmt->bind_param("i", $id_paciente);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        try {
+            $stmt = $this->db->prepare("
+                SELECT mp.id_medicamento_paciente,
+                    mp.fecha_preescripcion,
+                    mp.tiempo_tratamiento, 
+                    mp.indicaciones,
+                    mp.id_estado,
+                    mp.id_medicamento,
+                    mp.id_paciente,
+                    m.nombre as nombre_medicamento,
+                    ff.nombre as forma_farmaceutica,
+                    gt.nombre as grupo_terapeutico,
+                    va.nombre as via_administracion,
+                    e.nombre as estado
+                FROM medicamento_paciente mp
+                INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
+                LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+                LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+                LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+                LEFT JOIN estado e ON mp.id_estado = e.id_estado
+                WHERE mp.id_paciente = ?
+                ORDER BY mp.fecha_preescripcion DESC
+            ");
+            $stmt->bind_param("i", $id_paciente);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en obtenerMisMedicamentos: " . $e->getMessage());
+            return [];
+        }
     }
 
     // Obtener un medicamento específico asignado a un paciente
     public function obtenerMedicamentoPacientePorId($id_medicamento_paciente) {
-        $stmt = $this->db->prepare("
-            SELECT mp.*, 
-                m.nombre as nombre_medicamento,
-                ff.nombre as forma_farmaceutica,
-                gt.nombre as grupo_terapeutico,
-                va.nombre as via_administracion,
-                CONCAT(u.nombre, ' ', u.apellidos) as nombre_paciente
-            FROM medicamento_paciente mp
-            INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
-            INNER JOIN usuario u ON mp.id_paciente = u.id_usuario
-            LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
-            LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
-            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
-            WHERE mp.id_medicamento_paciente = ?
-        ");
-        $stmt->bind_param("i", $id_medicamento_paciente);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        try {
+            $stmt = $this->db->prepare("
+                SELECT mp.*, 
+                    m.nombre as nombre_medicamento,
+                    ff.nombre as forma_farmaceutica,
+                    gt.nombre as grupo_terapeutico,
+                    va.nombre as via_administracion,
+                    u.cedula_usuario,
+                    CONCAT(u.nombre, ' ', u.apellidos) as nombre_paciente
+                FROM medicamento_paciente mp
+                INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
+                INNER JOIN usuario u ON mp.id_paciente = u.id_usuario
+                LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+                LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+                LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+                WHERE mp.id_medicamento_paciente = ?
+            ");
+            $stmt->bind_param("i", $id_medicamento_paciente);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_assoc();
+        } catch (Exception $e) {
+            error_log("Error en obtenerMedicamentoPacientePorId: " . $e->getMessage());
+            return null;
+        }
     }
 
     // Actualizar medicamento asignado a paciente
     public function actualizarMedicamentoPaciente($id_medicamento_paciente, $nombre_completo, $fecha_preescripcion, $tiempo_tratamiento, $indicaciones, $id_medicamento, $id_estado) {
-        $stmt = $this->db->prepare("
-            UPDATE medicamento_paciente 
-            SET nombre_completo = ?, fecha_preescripcion = ?, tiempo_tratamiento = ?, 
-                indicaciones = ?, id_medicamento = ?, id_estado = ?
-            WHERE id_medicamento_paciente = ?
-        ");
-        $stmt->bind_param("ssssiiii", $nombre_completo, $fecha_preescripcion, $tiempo_tratamiento, $indicaciones, $id_medicamento, $id_estado, $id_medicamento_paciente);
-        return $stmt->execute();
+        try {
+            $stmt = $this->db->prepare("
+                UPDATE medicamento_paciente 
+                SET nombre_completo = ?, fecha_preescripcion = ?, tiempo_tratamiento = ?, 
+                    indicaciones = ?, id_medicamento = ?, id_estado = ?
+                WHERE id_medicamento_paciente = ?
+            ");
+            
+            $stmt->bind_param("ssssiii", $nombre_completo, $fecha_preescripcion, $tiempo_tratamiento, $indicaciones, $id_medicamento, $id_estado, $id_medicamento_paciente);
+            
+            return $stmt->execute() && $stmt->affected_rows > 0;
+        } catch (Exception $e) {
+            error_log("Error en actualizarMedicamentoPaciente: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Actualizar estado de medicamento asignado
     public function actualizarEstadoMedicamentoPaciente($id_medicamento_paciente, $id_estado) {
-        $stmt = $this->db->prepare("UPDATE medicamento_paciente SET id_estado = ? WHERE id_medicamento_paciente = ?");
-        $stmt->bind_param("ii", $id_estado, $id_medicamento_paciente);
-        return $stmt->execute();
+        try {
+            $stmt = $this->db->prepare("UPDATE medicamento_paciente SET id_estado = ? WHERE id_medicamento_paciente = ?");
+            $stmt->bind_param("ii", $id_estado, $id_medicamento_paciente);
+            return $stmt->execute() && $stmt->affected_rows > 0;
+        } catch (Exception $e) {
+            error_log("Error en actualizarEstadoMedicamentoPaciente: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Eliminar medicamento asignado
     public function eliminarMedicamentoPaciente($id_medicamento_paciente) {
-        $stmt = $this->db->prepare("DELETE FROM medicamento_paciente WHERE id_medicamento_paciente = ?");
-        $stmt->bind_param("i", $id_medicamento_paciente);
-        return $stmt->execute();
+        try {
+            $stmt = $this->db->prepare("DELETE FROM medicamento_paciente WHERE id_medicamento_paciente = ?");
+            $stmt->bind_param("i", $id_medicamento_paciente);
+            return $stmt->execute() && $stmt->affected_rows > 0;
+        } catch (Exception $e) {
+            error_log("Error en eliminarMedicamentoPaciente: " . $e->getMessage());
+            return false;
+        }
     }
 
-    // Obtener medicamentos activos de un paciente - CORREGIDO
+    // Obtener medicamentos activos de un paciente
     public function obtenerMedicamentosActivosPaciente($id_paciente) {
-        $stmt = $this->db->prepare("
-            SELECT mp.id_medicamento_paciente,
-                mp.fecha_preescripcion,
-                mp.tiempo_tratamiento, 
-                mp.indicaciones,
-                mp.id_estado,
-                mp.id_medicamento,
-                mp.id_paciente,
-                m.nombre as nombre_medicamento,
-                ff.nombre as forma_farmaceutica,
-                gt.nombre as grupo_terapeutico,
-                va.nombre as via_administracion
-            FROM medicamento_paciente mp
-            INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
-            LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
-            LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
-            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_va_administracion
-            WHERE mp.id_paciente = ? AND mp.id_estado = 1
-            ORDER BY mp.fecha_preescripcion DESC
-        ");
-        $stmt->bind_param("i", $id_paciente);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        try {
+            $stmt = $this->db->prepare("
+                SELECT mp.id_medicamento_paciente,
+                    mp.fecha_preescripcion,
+                    mp.tiempo_tratamiento, 
+                    mp.indicaciones,
+                    mp.id_estado,
+                    mp.id_medicamento,
+                    mp.id_paciente,
+                    m.nombre as nombre_medicamento,
+                    ff.nombre as forma_farmaceutica,
+                    gt.nombre as grupo_terapeutico,
+                    va.nombre as via_administracion
+                FROM medicamento_paciente mp
+                INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
+                LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+                LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+                LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+                WHERE mp.id_paciente = ? AND mp.id_estado = 1
+                ORDER BY mp.fecha_preescripcion DESC
+            ");
+            $stmt->bind_param("i", $id_paciente);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en obtenerMedicamentosActivosPaciente: " . $e->getMessage());
+            return [];
+        }
     }
 
     // Verificar si un medicamento ya está asignado a un paciente (para evitar duplicados)
     public function verificarMedicamentoAsignado($id_medicamento, $id_paciente) {
-        $stmt = $this->db->prepare("
-            SELECT COUNT(*) as total 
-            FROM medicamento_paciente 
-            WHERE id_medicamento = ? AND id_paciente = ? AND id_estado = 1
-        ");
-        $stmt->bind_param("ii", $id_medicamento, $id_paciente);
-        $stmt->execute();
-        $result = $stmt->get_result()->fetch_assoc();
-        return $result['total'] > 0;
+        try {
+            $stmt = $this->db->prepare("
+                SELECT COUNT(*) as total 
+                FROM medicamento_paciente 
+                WHERE id_medicamento = ? AND id_paciente = ? AND id_estado = 1
+            ");
+            $stmt->bind_param("ii", $id_medicamento, $id_paciente);
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_assoc();
+            return $result['total'] > 0;
+        } catch (Exception $e) {
+            error_log("Error en verificarMedicamentoAsignado: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Buscar paciente por cédula (para médicos que asignan medicamentos)
     public function buscarPacientePorCedula($cedula) {
-        $stmt = $this->db->prepare("
-            SELECT u.id_usuario, u.cedula_usuario, 
-                   CONCAT(u.nombre, ' ', u.apellidos) as nombre_completo
-            FROM usuario u
-            WHERE u.cedula_usuario = ? AND u.id_rol = 3 AND u.id_estado = 1
-        ");
-        $stmt->bind_param("s", $cedula);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        try {
+            $stmt = $this->db->prepare("
+                SELECT u.id_usuario, u.cedula_usuario, 
+                       CONCAT(u.nombre, ' ', u.apellidos) as nombre_completo
+                FROM usuario u
+                WHERE u.cedula_usuario = ? AND u.id_rol = 3 AND u.id_estado = 1
+            ");
+            $stmt->bind_param("s", $cedula);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_assoc();
+        } catch (Exception $e) {
+            error_log("Error en buscarPacientePorCedula: " . $e->getMessage());
+            return null;
+        }
     }
+
+    // ====== CRUD PARA CATÁLOGO DE MEDICAMENTOS (ADMIN) ======
 
     // Crear medicamento
     public function crear($nombre, $id_forma_farmaceutica, $id_grupo_terapeutico, $id_via_administracion, $id_estado = 1) {
-        $stmt = $this->db->prepare("
-            INSERT INTO medicamento (nombre, id_forma_farmaceutica, id_grupo_terapeutico, id_via_administracion, id_estado) 
-            VALUES (?, ?, ?, ?, ?)
-        ");
-        $stmt->bind_param("siiii", $nombre, $id_forma_farmaceutica, $id_grupo_terapeutico, $id_via_administracion, $id_estado);
-        return $stmt->execute();
+        try {
+            $stmt = $this->db->prepare("
+                INSERT INTO medicamento (nombre, id_forma_farmaceutica, id_grupo_terapeutico, id_via_administracion, id_estado) 
+                VALUES (?, ?, ?, ?, ?)
+            ");
+            $stmt->bind_param("siiii", $nombre, $id_forma_farmaceutica, $id_grupo_terapeutico, $id_via_administracion, $id_estado);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error en crear medicamento: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Obtener medicamento por ID
     public function obtenerPorId($id_medicamento) {
-        $stmt = $this->db->prepare("
-            SELECT m.*, 
-                   ff.nombre as forma_farmaceutica,
-                   gt.nombre as grupo_terapeutico,
-                   va.nombre as via_administracion,
-                   e.nombre as estado
-            FROM medicamento m
-            LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
-            LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
-            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
-            LEFT JOIN estado e ON m.id_estado = e.id_estado
-            WHERE m.id_medicamento = ?
-        ");
-        $stmt->bind_param("i", $id_medicamento);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
+        try {
+            $stmt = $this->db->prepare("
+                SELECT m.*, 
+                       ff.nombre as forma_farmaceutica,
+                       gt.nombre as grupo_terapeutico,
+                       va.nombre as via_administracion,
+                       e.nombre as estado
+                FROM medicamento m
+                LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+                LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+                LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+                LEFT JOIN estado e ON m.id_estado = e.id_estado
+                WHERE m.id_medicamento = ?
+            ");
+            $stmt->bind_param("i", $id_medicamento);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_assoc();
+        } catch (Exception $e) {
+            error_log("Error en obtenerPorId: " . $e->getMessage());
+            return null;
+        }
     }
 
     // Actualizar medicamento
     public function actualizar($id_medicamento, $nombre, $id_forma_farmaceutica, $id_grupo_terapeutico, $id_via_administracion, $id_estado) {
-        $stmt = $this->db->prepare("
-            UPDATE medicamento 
-            SET nombre = ?, id_forma_farmaceutica = ?, id_grupo_terapeutico = ?, 
-                id_via_administracion = ?, id_estado = ?
-            WHERE id_medicamento = ?
-        ");
-        $stmt->bind_param("siiiii", $nombre, $id_forma_farmaceutica, $id_grupo_terapeutico, $id_via_administracion, $id_estado, $id_medicamento);
-        return $stmt->execute();
+        try {
+            $stmt = $this->db->prepare("
+                UPDATE medicamento 
+                SET nombre = ?, id_forma_farmaceutica = ?, id_grupo_terapeutico = ?, 
+                    id_via_administracion = ?, id_estado = ?
+                WHERE id_medicamento = ?
+            ");
+            $stmt->bind_param("siiiii", $nombre, $id_forma_farmaceutica, $id_grupo_terapeutico, $id_via_administracion, $id_estado, $id_medicamento);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error en actualizar medicamento: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Actualizar estado del medicamento
     public function actualizarEstado($id_medicamento, $id_estado) {
-        $stmt = $this->db->prepare("UPDATE medicamento SET id_estado = ? WHERE id_medicamento = ?");
-        $stmt->bind_param("ii", $id_estado, $id_medicamento);
-        return $stmt->execute();
+        try {
+            $stmt = $this->db->prepare("UPDATE medicamento SET id_estado = ? WHERE id_medicamento = ?");
+            $stmt->bind_param("ii", $id_estado, $id_medicamento);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error en actualizarEstado medicamento: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Eliminar medicamento
     public function eliminar($id_medicamento) {
-        $stmt = $this->db->prepare("DELETE FROM medicamento WHERE id_medicamento = ?");
-        $stmt->bind_param("i", $id_medicamento);
-        return $stmt->execute();
+        try {
+            $stmt = $this->db->prepare("DELETE FROM medicamento WHERE id_medicamento = ?");
+            $stmt->bind_param("i", $id_medicamento);
+            return $stmt->execute();
+        } catch (Exception $e) {
+            error_log("Error en eliminar medicamento: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Buscar medicamentos
     public function buscar($termino) {
-        $termino = "%$termino%";
-        $stmt = $this->db->prepare("
-            SELECT m.*, 
-                   ff.nombre as forma_farmaceutica,
-                   gt.nombre as grupo_terapeutico,
-                   va.nombre as via_administracion,
-                   e.nombre as estado
-            FROM medicamento m
-            LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
-            LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
-            LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
-            LEFT JOIN estado e ON m.id_estado = e.id_estado
-            WHERE m.nombre LIKE ? OR ff.nombre LIKE ? OR gt.nombre LIKE ? OR va.nombre LIKE ?
-            ORDER BY m.nombre ASC
-        ");
-        $stmt->bind_param("ssss", $termino, $termino, $termino, $termino);
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        try {
+            $termino = "%$termino%";
+            $stmt = $this->db->prepare("
+                SELECT m.*, 
+                       ff.nombre as forma_farmaceutica,
+                       gt.nombre as grupo_terapeutico,
+                       va.nombre as via_administracion,
+                       e.nombre as estado
+                FROM medicamento m
+                LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+                LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+                LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+                LEFT JOIN estado e ON m.id_estado = e.id_estado
+                WHERE m.nombre LIKE ? OR ff.nombre LIKE ? OR gt.nombre LIKE ? OR va.nombre LIKE ?
+                ORDER BY m.nombre ASC
+            ");
+            $stmt->bind_param("ssss", $termino, $termino, $termino, $termino);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en buscar: " . $e->getMessage());
+            return [];
+        }
     }
 
     // Obtener formas farmacéuticas
     public function obtenerFormasFarmaceuticas() {
-        $stmt = $this->db->prepare("SELECT * FROM forma_farmaceutica WHERE id_estado = 1 ORDER BY nombre");
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM forma_farmaceutica ORDER BY nombre");
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en obtenerFormasFarmaceuticas: " . $e->getMessage());
+            return [];
+        }
     }
 
     // Obtener grupos terapéuticos
     public function obtenerGruposTerapeuticos() {
-        $stmt = $this->db->prepare("SELECT * FROM grupo_terapeutico WHERE id_estado = 1 ORDER BY nombre");
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM grupo_terapeutico ORDER BY nombre");
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en obtenerGruposTerapeuticos: " . $e->getMessage());
+            return [];
+        }
     }
 
     // Obtener vías de administración
     public function obtenerViasAdministracion() {
-        $stmt = $this->db->prepare("SELECT * FROM via_administracion WHERE id_estado = 1 ORDER BY nombre");
-        $stmt->execute();
-        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM via_administracion ORDER BY nombre");
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en obtenerViasAdministracion: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    // Obtener todas las medicaciones de pacientes (para médicos)
+    public function obtenerTodasMedicacionesPacientes() {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT mp.id_medicamento_paciente,
+                    mp.nombre_completo as nombre_paciente,
+                    mp.fecha_preescripcion,
+                    mp.tiempo_tratamiento, 
+                    mp.indicaciones,
+                    mp.id_estado,
+                    mp.id_medicamento,
+                    mp.id_paciente,
+                    m.nombre as nombre_medicamento,
+                    ff.nombre as forma_farmaceutica,
+                    gt.nombre as grupo_terapeutico,
+                    va.nombre as via_administracion,
+                    e.nombre as estado,
+                    u.cedula_usuario as cedula_paciente
+                FROM medicamento_paciente mp
+                INNER JOIN medicamento m ON mp.id_medicamento = m.id_medicamento
+                INNER JOIN usuario u ON mp.id_paciente = u.id_usuario
+                LEFT JOIN forma_farmaceutica ff ON m.id_forma_farmaceutica = ff.id_forma_farmaceutica
+                LEFT JOIN grupo_terapeutico gt ON m.id_grupo_terapeutico = gt.id_grupo_farmaceutico
+                LEFT JOIN via_administracion va ON m.id_via_administracion = va.id_via_administracion
+                LEFT JOIN estado e ON mp.id_estado = e.id_estado
+                ORDER BY mp.fecha_preescripcion DESC, mp.nombre_completo ASC
+            ");
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error en obtenerTodasMedicacionesPacientes: " . $e->getMessage());
+            return [];
+        }
     }
 }
 ?>

@@ -3,120 +3,213 @@ require_once 'app/config/db.php';
 
 class Usuario {
     private $db;
-    public function __construct() { $this->db = Database::connect(); }
 
-    public function login($cedula, $password) {
-        $stmt = $this->db->prepare("SELECT u.*, r.nombre AS rol_nombre FROM usuario u
-            INNER JOIN rol r ON u.id_rol = r.id_rol
-            WHERE u.cedula_usuario = ? AND u.id_estado = 1 LIMIT 1");
-        $stmt->bind_param("s", $cedula);
-        $stmt->execute();
-        $user = $stmt->get_result()->fetch_assoc();
-        if (!$user) return false;
-
-        $stored = $user['contrasena'];
-        $ok = false;
-        if (preg_match('/^\$2[aby]\$/', $stored)) {
-            $ok = password_verify($password, $stored);
-        } else {
-            $ok = ($password === $stored);
+    public function __construct() {
+        try {
+            $this->db = Database::connect();
+            error_log("Usuario: Conexión a DB establecida correctamente");
+        } catch (Exception $e) {
+            error_log("Usuario: Error en constructor - " . $e->getMessage());
+            throw $e;
         }
-        if (!$ok) return false;
-
-        return [
-            'id_usuario' => (int)$user['id_usuario'],
-            'cedula_usuario' => $user['cedula_usuario'],
-            'nombre' => $user['nombre'],
-            'apellidos' => $user['apellidos'],
-            'correo' => $user['correo'],
-            'telefono' => $user['telefono'],
-            'fecha_nacimiento' => $user['fecha_nacimiento'],
-            'direccion' => $user['direccion'],
-            'id_rol' => (int)$user['id_rol'],
-            'rol_nombre' => $user['rol_nombre'],
-            'id_estado' => (int)$user['id_estado'],
-        ];
     }
 
-<<<<<<< Updated upstream
+    public function login($cedula, $password) {
+        try {
+            error_log("Usuario: Iniciando login para cedula: " . $cedula);
+            
+            // Verificar conexión
+            if (!$this->db) {
+                throw new Exception("No hay conexión a la base de datos");
+            }
+            
+            // Consulta usando los nombres correctos de la tabla
+            $stmt = $this->db->prepare("SELECT u.*, r.nombre as rol_nombre FROM usuario u 
+                                      INNER JOIN rol r ON u.id_rol = r.id_rol 
+                                      WHERE u.cedula_usuario = ? AND u.id_estado = 1");
+            
+            if (!$stmt) {
+                error_log("Usuario: Error preparando statement: " . $this->db->error);
+                throw new Exception("Error preparando consulta: " . $this->db->error);
+            }
+            
+            $stmt->bind_param("s", $cedula);
+            
+            if (!$stmt->execute()) {
+                error_log("Usuario: Error ejecutando query: " . $stmt->error);
+                throw new Exception("Error ejecutando consulta: " . $stmt->error);
+            }
+            
+            $result = $stmt->get_result()->fetch_assoc();
+            error_log("Usuario: Resultado de consulta: " . ($result ? "Usuario encontrado" : "Usuario no encontrado"));
+
+            if ($result) {
+                // Verificar contraseña
+                $passwordMatch = false;
+                
+                error_log("Usuario: Verificando contraseña...");
+                error_log("Usuario: Longitud de contraseña almacenada: " . strlen($result['contrasena']));
+                
+                // Verificar si la contraseña está hasheada (más de 20 caracteres)
+                if (strlen($result['contrasena']) > 20) {
+                    // Contraseña hasheada
+                    $passwordMatch = password_verify($password, $result['contrasena']);
+                    error_log("Usuario: Verificación con hash: " . ($passwordMatch ? "exitosa" : "fallida"));
+                } else {
+                    // Contraseña en texto plano (para migración)
+                    $passwordMatch = ($password === $result['contrasena']);
+                    error_log("Usuario: Verificación texto plano: " . ($passwordMatch ? "exitosa" : "fallida"));
+                    
+                    // Hashear la contraseña para próximas veces
+                    if ($passwordMatch) {
+                        $this->updatePasswordHash($result['id_usuario'], $password);
+                    }
+                }
+
+                if ($passwordMatch) {
+                    // Iniciar sesión
+                    if (session_status() === PHP_SESSION_NONE) {
+                        session_start();
+                    }
+                    
+                    $_SESSION['user'] = [
+                        'id' => $result['id_usuario'],
+                        'cedula' => $result['cedula_usuario'],
+                        'nombre' => $result['nombre'],
+                        'apellidos' => $result['apellidos'],
+                        'correo' => $result['correo'],
+                        'telefono' => $result['telefono'],
+                        'rol' => $result['id_rol'],
+                        'rol_nombre' => $result['rol_nombre'] ?? ''
+                    ];
+
+                    error_log("Usuario: Sesión iniciada para usuario ID: " . $result['id_usuario']);
+
+                    // Determinar redirect según rol
+                    $redirect = $this->getRedirectByRole($result['id_rol']);
+
+                    return [
+                        'success' => true,
+                        'message' => 'Login exitoso',
+                        'redirect' => $redirect,
+                        'user' => $_SESSION['user']
+                    ];
+                } else {
+                    error_log("Usuario: Contraseña incorrecta para cedula: " . $cedula);
+                }
+            } else {
+                error_log("Usuario: Usuario no encontrado o inactivo para cedula: " . $cedula);
+            }
+
+            return [
+                'success' => false,
+                'message' => 'Credenciales incorrectas'
+            ];
+
+        } catch (Exception $e) {
+            error_log("Usuario: Error en login: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error interno del servidor: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    private function getRedirectByRole($rolId) {
+        switch ($rolId) {
+            case 1: // Administrador
+                return '../Administrativo/inicioAdmin.html';
+            case 2: // Médico
+                return '../Medicos/inicioMedico.html';
+            case 3: // Paciente
+                return '../Paciente/inicioPaciente.html';
+            default:
+                return '../index.php';
+        }
+    }
+
+    private function updatePasswordHash($userId, $password) {
+        try {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $this->db->prepare("UPDATE usuario SET contrasena = ? WHERE id_usuario = ?");
+            $stmt->bind_param("si", $hashedPassword, $userId);
+            $stmt->execute();
+            error_log("Usuario: Contraseña hasheada actualizada para usuario ID: " . $userId);
+        } catch (Exception $e) {
+            error_log("Usuario: Error actualizando hash de contraseña: " . $e->getMessage());
+        }
+    }
+
+    // Resto de métodos mantenidos igual...
+    public function registrar($cedula, $nombre, $apellidos, $correo, $telefono, $fecha_nacimiento, $direccion, $password, $id_genero, $id_estado_civil, $id_rol, $id_estado) {
+        try {
+            if ($this->cedulaExists($cedula)) {
+                return false;
+            }
+
+            if ($this->emailExists($correo)) {
+                return false;
+            }
+
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            $stmt = $this->db->prepare("INSERT INTO usuario 
+                (cedula_usuario, nombre, apellidos, correo, telefono, fecha_nacimiento, 
+                direccion, contrasena, id_genero, id_estado_civil, id_rol, id_estado) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+            $stmt->bind_param("ssssssssiiii", 
+                $cedula, $nombre, $apellidos, $correo, $telefono, $fecha_nacimiento,
+                $direccion, $hashedPassword, $id_genero, $id_estado_civil, $id_rol, $id_estado
+            );
+
+            return $stmt->execute();
+
+        } catch (Exception $e) {
+            error_log("Error en registro: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function obtenerTodos() {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT u.*, r.nombre as rol_nombre, e.nombre as estado_nombre,
+                       g.nombre as genero_nombre, ec.nombre as estado_civil_nombre
+                FROM usuario u 
+                LEFT JOIN rol r ON u.id_rol = r.id_rol
+                LEFT JOIN estado e ON u.id_estado = e.id_estado
+                LEFT JOIN genero g ON u.id_genero = g.id_genero
+                LEFT JOIN estado_civil ec ON u.id_estado_civil = ec.id_estado_civil
+                ORDER BY u.nombre, u.apellidos
+            ");
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (Exception $e) {
+            error_log("Error al obtener usuarios: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    private function cedulaExists($cedula) {
+        $stmt = $this->db->prepare("SELECT id_usuario FROM usuario WHERE cedula_usuario = ?");
+        $stmt->bind_param("s", $cedula);
+        $stmt->execute();
+        return $stmt->get_result()->num_rows > 0;
+    }
+
     private function emailExists($email) {
         $stmt = $this->db->prepare("SELECT id_usuario FROM usuario WHERE correo = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         return $stmt->get_result()->num_rows > 0;
     }
-}
-=======
-    public function getAll() {
-        $sql = "SELECT id_usuario, cedula_usuario, nombre, apellidos, correo, telefono, fecha_nacimiento, direccion, id_rol, id_estado
-                FROM usuario ORDER BY id_usuario ASC";
-        $res = $this->db->query($sql);
-        $out = [];
-        while ($row = $res->fetch_assoc()) $out[] = $row;
-        return $out;
-    }
 
-    public function getById($id) {
-        $stmt = $this->db->prepare("SELECT id_usuario, cedula_usuario, nombre, apellidos, correo, telefono, fecha_nacimiento, direccion, id_rol, id_estado
-                                    FROM usuario WHERE id_usuario=?");
-        $stmt->bind_param("i", $id);
+    private function emailExistsForUpdate($email, $userId) {
+        $stmt = $this->db->prepare("SELECT id_usuario FROM usuario WHERE correo = ? AND id_usuario != ?");
+        $stmt->bind_param("si", $email, $userId);
         $stmt->execute();
-        return $stmt->get_result()->fetch_assoc();
-    }
-
-    public function create($data) {
-        $stmt = $this->db->prepare("INSERT INTO usuario
-            (cedula_usuario, nombre, apellidos, correo, telefono, fecha_nacimiento, direccion, contrasena, id_genero, id_estado_civil, id_rol, id_estado)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
-        $contrasena = $data['contrasena'];
-        // keep plain if needed for compatibility; optionally hash if requested
-        $stmt->bind_param("ssssssssssii",
-            $data['cedula_usuario'],
-            $data['nombre'],
-            $data['apellidos'],
-            $data['correo'],
-            $data['telefono'],
-            $data['fecha_nacimiento'],
-            $data['direccion'],
-            $contrasena,
-            $data['id_genero'],
-            $data['id_estado_civil'],
-            $data['id_rol'],
-            $data['id_estado']
-        );
-        $stmt->execute();
-        return $this->db->insert_id;
-    }
-
-    public function update($data) {
-        // Build dynamic update with/without password
-        if (isset($data['contrasena']) && $data['contrasena'] !== '') {
-            $stmt = $this->db->prepare("UPDATE usuario SET
-                cedula_usuario=?, nombre=?, apellidos=?, correo=?, telefono=?, fecha_nacimiento=?, direccion=?, contrasena=?, id_genero=?, id_estado_civil=?, id_rol=?, id_estado=?
-                WHERE id_usuario=?");
-            $stmt->bind_param("ssssssssssiii",
-                $data['cedula_usuario'], $data['nombre'], $data['apellidos'], $data['correo'], $data['telefono'],
-                $data['fecha_nacimiento'], $data['direccion'], $data['contrasena'], $data['id_genero'], $data['id_estado_civil'],
-                $data['id_rol'], $data['id_estado'], $data['id_usuario']
-            );
-        } else {
-            $stmt = $this->db->prepare("UPDATE usuario SET
-                cedula_usuario=?, nombre=?, apellidos=?, correo=?, telefono=?, fecha_nacimiento=?, direccion=?, id_genero=?, id_estado_civil=?, id_rol=?, id_estado=?
-                WHERE id_usuario=?");
-            $stmt->bind_param("ssssssssiiii",
-                $data['cedula_usuario'], $data['nombre'], $data['apellidos'], $data['correo'], $data['telefono'],
-                $data['fecha_nacimiento'], $data['direccion'], $data['id_genero'], $data['id_estado_civil'],
-                $data['id_rol'], $data['id_estado'], $data['id_usuario']
-            );
-        }
-        return $stmt->execute();
-    }
-
-    public function setEstado($id, $estado) {
-        $stmt = $this->db->prepare("UPDATE usuario SET id_estado=? WHERE id_usuario=?");
-        $stmt->bind_param("ii", $estado, $id);
-        return $stmt->execute();
+        return $stmt->get_result()->num_rows > 0;
     }
 }
 ?>
->>>>>>> Stashed changes

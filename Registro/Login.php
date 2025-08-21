@@ -84,58 +84,75 @@ if (isset($_SESSION['user']) && !isset($_GET['logout'])) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    e.preventDefault();
+    
+    var messageContainer = document.getElementById('messageContainer');
+    var loginBtn = document.getElementById('loginBtn');
+    var btnText = document.getElementById('btnText');
+    var loading = document.querySelector('.loading');
+    
+    messageContainer.innerHTML = '';
+    
+    loading.style.display = 'inline-block';
+    btnText.textContent = 'Iniciando sesion...';
+    loginBtn.disabled = true;
+    
+    var formData = new FormData(this);
+    
+    // Ruta corregida - desde Registro/ hacia la raíz
+    fetch('../router.php?action=login', {
+        method: 'POST',
+        body: formData
+    })
+    .then(function(response) {
+        return response.text();
+    })
+    .then(function(text) {
+        console.log('Respuesta del servidor:', text);
         
-        var messageContainer = document.getElementById('messageContainer');
-        var loginBtn = document.getElementById('loginBtn');
-        var btnText = document.getElementById('btnText');
-        var loading = document.querySelector('.loading');
+        // Buscar donde empieza el JSON
+        var jsonStart = text.indexOf('{');
+        var jsonEnd = text.lastIndexOf('}') + 1;
         
-        messageContainer.innerHTML = '';
+        if (jsonStart === -1 || jsonEnd === 0) {
+            throw new Error('No se encontró JSON válido en la respuesta');
+        }
         
-        loading.style.display = 'inline-block';
-        btnText.textContent = 'Iniciando sesion...';
-        loginBtn.disabled = true;
+        // Extraer solo la parte JSON
+        var jsonText = text.substring(jsonStart, jsonEnd);
+        console.log('JSON extraído:', jsonText);
         
-        var formData = new FormData(this);
+        try {
+            return JSON.parse(jsonText);
+        } catch (e) {
+            console.error('Error parsing JSON:', e);
+            console.error('Texto completo:', text);
+            throw new Error('Respuesta JSON inválida');
+        }
+    })
+    .then(function(result) {
+        console.log('Resultado procesado:', result);
         
-        fetch('../router.php?action=login', {
-            method: 'POST',
-            body: formData
-        })
-        .then(function(response) {
-            // Debugging: ver qué devuelve el servidor
-            return response.text().then(function(text) {
-                console.log('Server response:', text);
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.error('Error parsing JSON:', e);
-                    throw new Error('Respuesta del servidor no es JSON válido');
-                }
-            });
-        })
-        .then(function(result) {
-            if (result.status === 'success') {
-                messageContainer.innerHTML = '<div class="alert alert-success" role="alert">' + result.message + '. Redirigiendo...</div>';
-                
-                setTimeout(function() {
-                    window.location.href = result.redirect;
-                }, 1000);
-            } else {
-                messageContainer.innerHTML = '<div class="alert alert-danger" role="alert">' + result.message + '</div>';
-            }
-        })
-        .catch(function(error) {
-            console.error('Error:', error);
-            messageContainer.innerHTML = '<div class="alert alert-danger" role="alert">Error de conexion. Por favor intente nuevamente.</div>';
-        })
-        .finally(function() {
-            loading.style.display = 'none';
-            btnText.textContent = 'Iniciar Sesion';
-            loginBtn.disabled = false;
-        });
+        if (result.success) {
+            messageContainer.innerHTML = '<div class="alert alert-success" role="alert">' + result.message + '. Redirigiendo...</div>';
+            
+            setTimeout(function() {
+                window.location.href = result.redirect;
+            }, 1000);
+        } else {
+            messageContainer.innerHTML = '<div class="alert alert-danger" role="alert">' + (result.message || 'Error de login') + '</div>';
+        }
+    })
+    .catch(function(error) {
+        console.error('Error completo:', error);
+        messageContainer.innerHTML = '<div class="alert alert-danger" role="alert">Error de conexión: ' + error.message + '</div>';
+    })
+    .finally(function() {
+        loading.style.display = 'none';
+        btnText.textContent = 'Iniciar Sesion';
+        loginBtn.disabled = false;
     });
+});
   </script>
 </body>
 </html>

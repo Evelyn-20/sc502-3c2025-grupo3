@@ -1,51 +1,144 @@
 <?php
-require_once 'app/models/Usuario.php';
+error_log("AuthController: Archivo cargado");
 
 class AuthController {
+    
+    public function __construct() {
+        error_log("AuthController: Constructor ejecutado");
+    }
+    
     public function login() {
-        // Verificar que sea POST
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode(['status' => 'error', 'message' => 'Método no permitido']);
-            return;
-        }
+        error_log("AuthController: Método login iniciado");
+        
+        try {
+            // Limpiar buffer de salida
+            if (ob_get_level()) {
+                ob_clean();
+            }
+            
+            header('Content-Type: application/json; charset=utf-8');
+            
+            // Iniciar sesión si no está iniciada
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            
+            // Verificar que sea POST
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                error_log("AuthController: Método no es POST, es: " . $_SERVER['REQUEST_METHOD']);
+                echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+                return;
+            }
 
-        // Validar datos de entrada
-        $cedula = trim($_POST['cedula'] ?? '');
-        $password = trim($_POST['password'] ?? '');
+            // Validar datos de entrada
+            $cedula = trim($_POST['cedula'] ?? '');
+            $password = trim($_POST['password'] ?? '');
+            
+            error_log("AuthController: Cedula recibida: " . $cedula);
+            error_log("AuthController: Password longitud: " . strlen($password));
 
-        if (empty($cedula) || empty($password)) {
-            echo json_encode(['status' => 'error', 'message' => 'Por favor complete todos los campos']);
-            return;
-        }
+            if (empty($cedula) || empty($password)) {
+                error_log("AuthController: Campos vacíos");
+                echo json_encode(['success' => false, 'message' => 'Por favor complete todos los campos']);
+                return;
+            }
 
-        $usuario = new Usuario();
-        $result = $usuario->login($cedula, $password);
+            // Verificar ruta del archivo Usuario.php
+            $usuarioPath = 'app/models/Usuario.php';
+            if (!file_exists($usuarioPath)) {
+                error_log("AuthController: Usuario.php no encontrado en: " . $usuarioPath);
+                error_log("AuthController: Directorio actual: " . getcwd());
+                
+                echo json_encode(['success' => false, 'message' => 'Modelo Usuario no encontrado']);
+                return;
+            }
 
-        if ($result['success']) {
+            require_once $usuarioPath;
+            error_log("AuthController: Usuario.php incluido correctamente");
+
+            $usuario = new Usuario();
+            error_log("AuthController: Instancia Usuario creada");
+            
+            $result = $usuario->login($cedula, $password);
+            error_log("AuthController: Login ejecutado, resultado: " . json_encode($result));
+
+            echo json_encode($result, JSON_UNESCAPED_UNICODE);
+
+        } catch (Exception $e) {
+            error_log("AuthController: Excepción capturada: " . $e->getMessage());
+            error_log("AuthController: Archivo: " . $e->getFile() . " Línea: " . $e->getLine());
+            
+            // Limpiar buffer en caso de error
+            if (ob_get_level()) {
+                ob_clean();
+            }
+            
+            header('Content-Type: application/json; charset=utf-8');
             echo json_encode([
-                'status' => 'success',
-                'message' => 'Login exitoso',
-                'redirect' => $result['redirect'],
-                'user' => $result['user']
-            ]);
-        } else {
-            echo json_encode([
-                'status' => 'error', 
-                'message' => $result['message']
-            ]);
+                'success' => false,
+                'message' => 'Error del servidor: ' . $e->getMessage()
+            ], JSON_UNESCAPED_UNICODE);
         }
     }
 
     public function register() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode(['status' => 'error', 'message' => 'Método no permitido']);
-            return;
+        // Limpiar buffer de salida
+        if (ob_get_level()) {
+            ob_clean();
         }
+        
+        header('Content-Type: application/json; charset=utf-8');
+        
+        try {
+            // Verificar que sea POST
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+                return;
+            }
 
-        $usuario = new Usuario();
-        $result = $usuario->register($_POST);
+            require_once 'app/models/Usuario.php';
+            
+            $usuario = new Usuario();
+            
+            // Extraer datos del POST
+            $cedula = trim($_POST['cedula'] ?? '');
+            $nombre = trim($_POST['nombre'] ?? '');
+            $apellidos = trim($_POST['apellidos'] ?? '');
+            $correo = trim($_POST['correo'] ?? '');
+            $telefono = trim($_POST['telefono'] ?? '');
+            $fecha_nacimiento = $_POST['fecha_nacimiento'] ?? '';
+            $direccion = trim($_POST['direccion'] ?? '');
+            $password = trim($_POST['password'] ?? '');
+            $id_genero = intval($_POST['id_genero'] ?? 0);
+            $id_estado_civil = intval($_POST['id_estado_civil'] ?? 0);
+            $id_rol = intval($_POST['id_rol'] ?? 3); // Por defecto paciente
+            $id_estado = intval($_POST['id_estado'] ?? 1); // Por defecto activo
 
-        echo json_encode($result);
+            // Validaciones básicas
+            if (empty($cedula) || empty($nombre) || empty($apellidos) || 
+                empty($correo) || empty($password)) {
+                echo json_encode(['success' => false, 'message' => 'Todos los campos obligatorios deben ser completados']);
+                return;
+            }
+
+            $result = $usuario->registrar(
+                $cedula, $nombre, $apellidos, $correo, $telefono,
+                $fecha_nacimiento, $direccion, $password, 
+                $id_genero, $id_estado_civil, $id_rol, $id_estado
+            );
+
+            if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Usuario registrado exitosamente']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error al registrar usuario. Posiblemente la cédula o correo ya existen']);
+            }
+
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error del servidor: ' . $e->getMessage()
+            ]);
+        }
     }
 
     public function logout() {
@@ -53,6 +146,7 @@ class AuthController {
         session_unset();
         session_destroy();
         
+        // Limpiar cookie de sesión
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', time() - 3600, '/');
         }
@@ -61,8 +155,8 @@ class AuthController {
         header('Pragma: no-cache');
         header('Expires: 0');
         
-        // Cambiar la ruta - quitar el path completo
         header('Location: /sc502-3c2025-grupo3/Registro/Login.php?logout=1');
         exit;
     }
 }
+?>
