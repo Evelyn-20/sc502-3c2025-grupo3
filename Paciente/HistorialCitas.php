@@ -1,10 +1,25 @@
+<?php
+// Iniciar sesión si no está iniciada
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Verificar que el usuario esté logueado
+if (!isset($_SESSION['user']['id'])) {
+    header("Location: ../index.php");
+    exit();
+}
+
+// Debug para verificar sesión
+error_log("Usuario en sesión: " . print_r($_SESSION['user'], true));
+?>
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Historical Citas</title>
+  <title>Historial de Citas</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css" />
@@ -16,11 +31,11 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-10">
-        <h1 class="text-center mb-5">Historical Citas</h1>
+        <h1 class="text-center mb-5">Historial de Citas</h1>
 
         <div class="row mb-4">
           <div class="col-md-12">
-            <input type="text" class="form-control" placeholder="Buscar">
+            <input type="text" class="form-control" placeholder="Buscar en citas...">
           </div>
         </div>
 
@@ -46,7 +61,9 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Las citas se cargarán aquí via AJAX -->
+              <tr>
+                <td colspan="7" class="text-center">Cargando citas...</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -73,8 +90,30 @@
     </div>
   </div>
 
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center;">
+      <i class="fas fa-spinner fa-spin fa-3x"></i>
+      <p class="mt-3">Cargando...</p>
+    </div>
+  </div>
+
   <script src="../js/jquery-3.7.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
   <script src="../js/citas.js"></script>
+
+  <script>
+    // Debug adicional
+    $(document).ready(function() {
+        console.log('Documento listo, iniciando carga de citas...');
+        setTimeout(function() {
+            if (typeof loadPatientAppointments === 'function') {
+                loadPatientAppointments();
+            } else {
+                console.error('Función loadPatientAppointments no encontrada');
+            }
+        }, 1000);
+    });
+  </script>
 </body>
 </html>

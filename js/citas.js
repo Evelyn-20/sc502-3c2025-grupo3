@@ -54,6 +54,55 @@ function initializePage() {
   }
 }
 
+function loadPatientAppointments() {
+  console.log('Cargando citas del paciente...');
+  
+  const url = determineRouterUrl('listMyAppointments');
+  console.log('URL para cargar citas:', url);
+  
+  // Mostrar indicador de carga
+  const tbody = $('#citasTable tbody');
+  tbody.html('<tr><td colspan="7" class="text-center"><i class="fas fa-spinner fa-spin"></i> Cargando citas...</td></tr>');
+  
+  $.ajax({
+    url: url,
+    method: 'GET',
+    dataType: 'json',
+    timeout: 10000, // 10 segundos de timeout
+    success: function(response) {
+      console.log('Respuesta del servidor:', response);
+      
+      if (response.status === 'success') {
+        console.log('Citas cargadas:', response.data.length);
+        populateAppointmentsTable(response.data);
+      } else {
+        console.error('Error en respuesta:', response.message);
+        tbody.html('<tr><td colspan="7" class="text-center text-danger">Error al cargar las citas: ' + (response.message || 'Error desconocido') + '</td></tr>');
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('Error AJAX al cargar citas:', {
+        status: status,
+        error: error,
+        responseText: xhr.responseText,
+        readyState: xhr.readyState,
+        statusText: xhr.statusText
+      });
+      
+      let errorMsg = 'Error de conexión al cargar las citas';
+      if (xhr.status === 404) {
+        errorMsg = 'Endpoint no encontrado (404)';
+      } else if (xhr.status === 500) {
+        errorMsg = 'Error interno del servidor (500)';
+      } else if (status === 'timeout') {
+        errorMsg = 'Timeout - El servidor tardó demasiado en responder';
+      }
+      
+      tbody.html('<tr><td colspan="7" class="text-center text-danger">' + errorMsg + '</td></tr>');
+    }
+  });
+}
+
 // Configurar event listeners
 function setupEventListeners() {
   if (typeof $ === 'undefined') {
@@ -424,27 +473,28 @@ function hideLoadingOverlay() {
 }
 
 // Cargar citas del paciente
-function loadPatientAppointments() {
-  console.log('Cargando citas del paciente...');
-  const url = determineRouterUrl('listMyCitas');
+function determineRouterUrl(action) {
+  const currentPath = window.location.pathname;
+  const currentFile = currentPath.split('/').pop();
   
-  $.ajax({
-    url: url,
-    method: 'GET',
-    dataType: 'json',
-    success: function(response) {
-      console.log('Citas cargadas:', response);
-      if (response.status === 'success') {
-        populateAppointmentsTable(response.data);
-      } else {
-        $('#citasTable tbody').html('<tr><td colspan="7" class="text-center">No se pudieron cargar las citas</td></tr>');
-      }
-    },
-    error: function(xhr, status, error) {
-      console.error('Error al cargar citas:', error, xhr.responseText);
-      $('#citasTable tbody').html('<tr><td colspan="7" class="text-center">Error al cargar las citas</td></tr>');
-    }
-  });
+  console.log('Ruta actual:', currentPath);
+  console.log('Archivo actual:', currentFile);
+  
+  let basePath = '';
+  
+  // Si estamos en una carpeta de paciente
+  if (currentPath.includes('/Paciente/') || currentPath.includes('/paciente/')) {
+    basePath = '../router.php';
+  } 
+  // Si estamos en la carpeta raíz o admin
+  else {
+    basePath = 'router.php';
+  }
+  
+  const fullUrl = `${basePath}?action=${action}`;
+  console.log('URL construida:', fullUrl);
+  
+  return fullUrl;
 }
 
 // Llenar tabla de citas
@@ -605,3 +655,4 @@ function getStatusBadgeClass(estadoId) {
 // Funciones globales para uso en HTML
 window.editAppointment = editAppointment;
 window.cancelAppointment = cancelAppointment;
+window.loadPatientAppointments = loadPatientAppointments;

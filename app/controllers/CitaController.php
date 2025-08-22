@@ -488,5 +488,21 @@ class CitaController {
 
         echo json_encode(['status' => 'success', 'data' => $servicios]);
     }
+
+    // Listar citas del usuario en sesión como PACIENTE
+    public function listMyAppointments() {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        if (!isset($_SESSION['user']['id'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Sesión no iniciada']);
+            return;
+        }
+        
+        $cita = new Cita();
+        $citas = $cita->obtenerPorUsuario($_SESSION['user']['id']);
+        echo json_encode(['status' => 'success', 'data' => $citas]);
+    }
 }
 ?>

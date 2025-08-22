@@ -78,7 +78,7 @@ try {
         case 'listCitasByUser':
             $cita->listByUser();
             break;
-        case 'listMyCitas':
+        case 'listMyAppointments':
             $cita->listMyAppointments();
             break;
         case 'showCita':
